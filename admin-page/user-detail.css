@@ -1,0 +1,31 @@
+
+        :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+        .admin-wrapper { display: flex; padding: 40px 50px; gap: 30px; }
+        .main-content { flex: 1; }
+
+        /* Grid Layout */
+        .grid-layout { display: grid; grid-template-columns: 350px 1fr; gap: 25px; margin-bottom: 25px; }
+        .card { background: var(--white); border-radius: 30px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        
+        /* Profile Section */
+        .user-big-photo { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 5px solid var(--bg); margin-bottom: 20px; background: #eee; }
+        .info-row { margin-bottom: 18px; border-bottom: 1px solid #F9F9F9; padding-bottom: 8px; text-align: left; }
+        .info-label { font-size: 0.7rem; color: #BBB; text-transform: uppercase; display: block; }
+        .info-value { font-size: 0.95rem; font-weight: 500; color: #333; word-break: break-all; }
+
+        /* Tables Styling */
+        h3 { font-family: 'Playfair Display'; margin-bottom: 20px; font-size: 1.3rem; color: #333; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 12px; font-size: 0.75rem; color: #BBB; border-bottom: 2px solid var(--bg); text-transform: uppercase; }
+        td { padding: 15px 12px; border-bottom: 1px solid #F9F9F9; font-size: 0.85rem; vertical-align: middle; }
+        
+        /* Audit Diff Tags & Photo Previews */
+        .diff-old { color: #d32f2f; text-decoration: line-through; background: #ffebee; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; display: inline-block; }
+        .diff-new { color: #388e3c; font-weight: 600; background: #e8f5e9; padding: 2px 6px; border-radius: 4px; display: inline-block; }
+        .history-thumb { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 1px solid #ddd; display: block; margin-bottom: 5px; }
+
+        .back-btn { text-decoration: none; color: var(--rose); font-weight: 600; margin-bottom: 25px; display: inline-block; transition: 0.3s; }
+        .back-btn:hover { transform: translateX(-5px); }

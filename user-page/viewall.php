@@ -1,16 +1,17 @@
-<?php include("config.php");
+<?php 
+require_once __DIR__ . "/config.php";
 session_start();
+
 if (!isset($_SESSION["user"])){
     header("location:login.php");
     exit();
 }
-?>
-<?php
-    if (isset($_POST["logoutbtn"])){
-        session_destroy();
-        header("location:login.php");
-        exit();
-    }
+
+if (isset($_POST["logoutbtn"])){
+    session_destroy();
+    header("location:login.php");
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,213 +19,243 @@ if (!isset($_SESSION["user"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Makeup Products</title>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
+    <title>Stylevana | All Treasures</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="afterl-style.css">
-   
+    
     <style>
-        /* Basic Reset & Body Styling */
-       
-
-        /* Page Title */
-        .page-title {
-            font-size: 28px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 25px;
-            text-align: center;
-            margin-top: 20px;
+        body {
+            background-color: #f5f5f0; 
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
         }
 
-        /* Product Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
-            gap: 20px; /* Space between cards */
-            justify-content: center;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            padding: 40px 20px;
+            max-width: 1300px;
+            margin: 0 auto;
         }
 
-        /* Product Card Styling */
         .product-card {
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border-radius: 4px;
             overflow: hidden;
+            transition: 0.3s;
+            position: relative;
+            text-align: center;
+            border: 1px solid #eee;
             display: flex;
             flex-direction: column;
-            transition: transform 0.2s ease-in-out;
-            border: 1px solid #e0e0e0;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        /* Flag Shape Offer Tag */
+        .offer-flag {
+            position: absolute;
+            top: 0;
+            left: 12px; 
+            background: #ff7675; 
+            color: white;
+            padding: 6px 8px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            z-index: 5;
+            clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
+            text-transform: uppercase;
+            line-height: 1.1;
+            min-width: 35px;
         }
 
         .image-container {
-            position: relative;
             width: 100%;
-            padding-top: 100%; /* Makes the container square for image */
+            height: 300px;
+            background: #f9f9f9;
             overflow: hidden;
-            border-bottom: 1px solid #eee;
         }
 
         .product-image {
-            position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Covers the area, might crop */
-            display: block;
+            object-fit: cover;
+            transition: 0.5s;
         }
 
-        .more-images-tag {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: bold;
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
+
+        .out-of-stock-img { filter: grayscale(1); opacity: 0.6; }
 
         .product-details {
             padding: 15px;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            flex-grow: 1; /* Allows details section to take remaining space */
+            justify-content: space-between;
         }
 
         .brand-name {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 5px;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            color: #282c3f;
+            display: block;
         }
 
         .product-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            font-size: 13px;
+            color: #535766;
+            margin: 0 0 8px 0;
+            font-weight: 400;
+            height: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .price-section {
             display: flex;
-            align-items: baseline;
-            margin-bottom: 10px;
-            flex-wrap: wrap; /* Allows prices to wrap on smaller screens */
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
         }
 
-        .current-price {
-            font-size: 22px;
-            font-weight: bold;
-            color: #333;
-            margin-right: 8px;
+        .current-price { font-size: 15px; font-weight: 700; color: #282c3f; }
+        .original-price { color: #7e818c; text-decoration: line-through; font-size: 12px; }
+        .discount-text { color: #ff905a; font-size: 12px; font-weight: 600; }
+
+        .shipping-tag {
+            color: #03a685;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: block;
         }
 
-        .original-price {
-            font-size: 14px;
-            color: #888;
-            text-decoration: line-through;
-            margin-right: 8px;
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: auto;
         }
 
-        .discount-percentage {
-            font-size: 14px;
-            font-weight: bold;
-            color: #28a745; /* Green for discount */
-        }
-
-        .delivery-info {
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-
-        .rating-section {
+        .cart-icon-btn {
+            flex: 0.3;
+            background: #fff;
+            border: 1px solid #d4d5d9;
+            color: #ff3f6c;
+            padding: 8px;
+            border-radius: 4px;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            font-size: 13px;
-            color: #555;
-            margin-top: auto; /* Pushes rating to the bottom */
-            padding-top: 10px;
-            border-top: 1px solid #eee;
-            margin-top: 15px; /* Space from above elements */
+            justify-content: center;
         }
 
-        .star-icon {
-            color: #28a745; /* Green star */
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
-        .review-count {
-            color: #777;
-        }
-
-        /* Mall Tag (if applicable) */
-        .mall-tag {
-            background-color: #9c27b0; /* Purple for Mall */
+        .buy-now-btn {
+            flex: 1;
+            background: #d5a69d; 
             color: #fff;
-            padding: 2px 6px;
+            padding: 8px;
             border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: auto; /* Pushes to the right */
-            align-self: flex-start; /* Aligns to top if flex-direction is column */
-            margin-top: -10px; /* Adjust to position correctly if needed */
-            margin-right: -10px;
+            font-weight: 600;
+            font-size: 13px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .out-of-stock-badge {
+            background: #999;
+            color: white;
+            padding: 8px;
+            width: 100%;
+            font-size: 12px;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
-    <?php include("header.php")?>
-    <main>
-    <div class="page-container">
-        <h1 class="page-title">Top Picks for you!</h1>
 
-        <div class="product-grid">
-             <?php 
-                $str = "select * from shop " ;
-                $result = mysqli_query($cn,$str);
-                while ( $row = mysqli_fetch_array($result))
-                {
-            ?>
-           
-            <div class="product-card">
-                <div class="image-container">
-                    <img src="<?php echo $row['productphoto']; ?>" alt="Lipstick Set" width="100" class="product-image" >
-                     <span class="more-images-tag">+2 More</span>
+    <?php include("header.php")?>
+
+    <div class="product-grid">
+        <?php 
+            // Saare products database se uthayega
+            $str = "SELECT * FROM shop ORDER BY pid DESC"; 
+            $result = mysqli_query($cn, $str);
+
+            while ($row = mysqli_fetch_array($result)) {
+                $pid = $row['pid'];
+                $stock = (int)($row['stock_qty'] ?? 0);
+                
+                // Backend fields setup
+                $selling_p = (float)$row['productprice'];
+                $mrp_p = (!empty($row['original_price'])) ? (float)$row['original_price'] : 0;
+                $offer_tag = $row['offer_text'] ?? ''; // Database column for "B1G2" etc.
+                
+                // Discount calculation
+                $discount_val = 0;
+                if ($mrp_p > $selling_p) {
+                    $discount_val = round((($mrp_p - $selling_p) / $mrp_p) * 100);
+                }
+        ?>
+        
+        <div class="product-card">
+            <!-- Priority to offer_tag, then auto-discount -->
+            <?php if(!empty($offer_tag) || $discount_val > 0): ?>
+                <div class="offer-flag">
+                    <?php echo !empty($offer_tag) ? $offer_tag : $discount_val . "%<br>OFF"; ?>
                 </div>
-                <div class="product-details">
-                    <span class="brand-name">Fenty Beauty</span>
-                    <h3 class="product-name"><?php echo $row['productName'] ; ?></h3>
-                    <div class="price-section">
-                        <span class="current-price"><?php echo $row['productprice'];?></span>
-                        <span class="original-price">₹1,999</span>
-                        <span class="discount-percentage">55% off</span>
-                    </div>
-                    <p class="delivery-info">Free Delivery</p>
-                    <div class="rating-section">
-                        <span class="star-icon">★ 4.2</span>
-                        <span class="review-count">2,104 Reviews</span>
-                        <span class="mall-tag">Mall</span>
-                    </div>
-                </div>
+            <?php endif; ?>
+
+            <div class="image-container">
+                <a href="order.php?pid=<?php echo $pid; ?>">
+                    <img src="<?php echo $row['productphoto']; ?>" alt="Product" class="product-image <?php echo ($stock <= 0) ? 'out-of-stock-img' : ''; ?>">
+                </a>
             </div>
-          <?php } ?>
-          
+
+            <div class="product-details">
+                <!-- Brand name backend se -->
+                <span class="brand-name"><?php echo strtoupper($row['brand'] ?? 'Stylevana'); ?></span>
+                <p class="product-name"><?php echo $row['productname']; ?></p>
+                
+                <div class="price-section">
+                    <span class="current-price">₹<?php echo $selling_p; ?></span>
+                    <?php if($mrp_p > $selling_p): ?>
+                        <span class="original-price">₹<?php echo $mrp_p; ?></span>
+                        <span class="discount-text">(<?php echo $discount_val; ?>% OFF)</span>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Shipping info backend se -->
+                <span class="shipping-tag">
+                    <i class="fas fa-truck"></i> <?php echo $row['shipping_status'] ?? 'Free Shipping'; ?>
+                </span>
+
+                <?php if($stock > 0): ?>
+                    <div class="button-group">
+                        <a href="addcart.php?pid=<?php echo $pid; ?>" class="cart-icon-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                        <a href="order.php?pid=<?php echo $pid; ?>" class="buy-now-btn">Buy Now</a>
+                    </div>
+                <?php else: ?>
+                    <span class="out-of-stock-badge">OUT OF STOCK</span>
+                <?php endif; ?>
+            </div>
         </div>
+
+        <?php } ?>
     </div>
-   </main>
+
     <?php include("footer.php")?>
+
 </body>
 </html>

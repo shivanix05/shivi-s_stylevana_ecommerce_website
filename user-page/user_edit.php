@@ -1,188 +1,198 @@
 <?php
-// Includes the database configuration and starts a session
-include("config.php");
+require_once __DIR__ . "/config.php";
 session_start();
 
-// Redirects to the login page if the user is not logged in
-if (!isset($_SESSION["user"])){
+if (!isset($_SESSION["user"])) {
     header("location:login.php");
     exit();
 }
 
-$name = $_SESSION["user"];
-$message = "";
+$u_mail = $_SESSION['user'];
 
-// Handle form submission for updating profile
-if (isset($_POST["update_profile"])) {
-    $name = mysqli_real_escape_string($cn, $_POST['name']);
-    $email = mysqli_real_escape_string($cn, $_POST['email']);
-    $mobile = mysqli_real_escape_string($cn, $_POST['mobile_number']);
-    $address = mysqli_real_escape_string($cn, $_POST['address']);
+// 1. Current User Data Fetch
+$res = mysqli_query($cn, "SELECT * FROM userdetail WHERE gmail='$u_mail'");
+$user = mysqli_fetch_array($res);
+$user_sno = $user['sno'];
 
-    // Update the user's data in the database
-    $update_query = "UPDATE userdetail SET name = '$name', email = '$email', mobile_number = '$mobile', address = '$address' WHERE name = '$name'";
-
-    if (mysqli_query($cn, $update_query)) {
-        // Update the session variable with the new name if it was changed
-        $_SESSION["user"] = $name;
-        $name = $name; // Update the local variable as well
-        $message = "Profile updated successfully!";
-    } else {
-        $message = "Error updating profile: " . mysqli_error($cn);
+// 2. Silent Log Function for Admin
+function logForAdmin($cn, $sno, $field, $old, $new) {
+    if ($old != $new) {
+        $old = mysqli_real_escape_string($cn, $old);
+        $new = mysqli_real_escape_string($cn, $new);
+        mysqli_query($cn, "INSERT INTO user_update_history (user_sno, field_name, old_value, new_value) 
+                           VALUES ('$sno', '$field', '$old', '$new')");
     }
 }
 
-// Fetch current user data to pre-populate the form
-$query = "SELECT * FROM userdetail WHERE name = '$name'";
-$result = mysqli_query($cn, $query);
-$user_data = mysqli_fetch_assoc($result);
+// 3. Update Logic
+if(isset($_POST['name'])) { 
+    $new_name = mysqli_real_escape_string($cn, $_POST['name']);
+    $new_gmail = mysqli_real_escape_string($cn, $_POST['gmail']); // Naya Gmail
+    $new_mobile = mysqli_real_escape_string($cn, $_POST['mobilenumber']);
+    $new_address = mysqli_real_escape_string($cn, $_POST['address']);
+    $new_city = mysqli_real_escape_string($cn, $_POST['city']);
+
+    // Check if new email already exists for someone else
+    if($new_gmail != $user['gmail']) {
+        $check_email = mysqli_query($cn, "SELECT sno FROM userdetail WHERE gmail='$new_gmail'");
+        if(mysqli_num_rows($check_email) > 0) {
+            echo "<script>alert('This Email is already registered with another account!'); window.history.back();</script>";
+            exit();
+        }
+    }
+
+    // Log changes before update
+    logForAdmin($cn, $user_sno, 'name', $user['name'], $new_name);
+    logForAdmin($cn, $user_sno, 'gmail', $user['gmail'], $new_gmail);
+    logForAdmin($cn, $user_sno, 'mobilenumber', $user['mobilenumber'], $new_mobile);
+    logForAdmin($cn, $user_sno, 'address', $user['address'], $new_address);
+    logForAdmin($cn, $user_sno, 'city', $user['city'], $new_city);
+
+    // Cropped Photo Handling
+    $photo_sql = "";
+    if(!empty($_POST['image_base64'])) {
+        $data = $_POST['image_base64'];
+        list($type, $data) = explode(';', $data);
+        list(, $data)      = explode(',', $data);
+        $data = base64_decode($data);
+        $filename = time() . '_user.png';
+        file_put_contents('uploads/' . $filename, $data);
+        
+        $photo_sql = ", userphoto='$filename'";
+        logForAdmin($cn, $user_sno, 'userphoto', $user['userphoto'], $filename);
+    }
+
+    // Main Update Query
+    $update_query = "UPDATE userdetail SET name='$new_name', gmail='$new_gmail', mobilenumber='$new_mobile', 
+                     address='$new_address', city='$new_city' $photo_sql WHERE sno='$user_sno'";
+    
+    if(mysqli_query($cn, $update_query)) {
+        // Update Session with NEW Email (Very Important)
+        $_SESSION['user'] = $new_gmail; 
+        echo "<script>alert('Profile & Email Updated Successfully!'); window.location.href='my-profile.php';</script>";
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile - Shivi's Stylevana</title>
-    <!-- Fonts and icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>Edit Profile | Shivi's Stylevana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="afterl-style.css">
-    <link rel="stylesheet" href="profile-style.css">
-    <style>body {
-    background-color: #f7f3f0;
-}
-
-.profile-container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 50px auto;
-    text-align: center;
-}
-
-.profile-container h2 {
-    font-size: 2em;
-    color: #4b3d37;
-    margin-bottom: 20px;
-}
-
-.message {
-    background-color: #d4edda;
-    color: #155724;
-    padding: 10px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.profile-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.form-group {
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #5c4b43;
-}
-
-.form-group input,
-.form-group textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1em;
-    box-sizing: border-box;
-}
-
-.form-actions {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.update-button,
-.cancel-button {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1em;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-}
-
-.update-button {
-    background-color: #7b584b;
-    color: #fff;
-}
-
-.update-button:hover {
-    background-color: #5c4b43;
-}
-
-.cancel-button {
-    background-color: #e9e9e9;
-    color: #555;
-}
-
-.cancel-button:hover {
-    background-color: #dcdcdc;
-}
-</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.css">
+    <style>
+        :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); }
+        .admin-wrapper { display: flex; justify-content: center; padding: 40px 20px; }
+        .main-content { width: 100%; max-width: 600px; }
+        .card { background: var(--white); border-radius: 30px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); text-align: center; }
+        #upload-demo { width: 100%; margin: 0 auto; display: none; }
+        .user-big-photo { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--bg); margin: 0 auto 20px; display: block; cursor: pointer; }
+        .info-row { margin-bottom: 20px; text-align: left; }
+        .info-label { font-size: 0.7rem; color: #BBB; text-transform: uppercase; display: block; letter-spacing: 0.5px; margin-bottom: 5px; }
+        .edit-input { width: 100%; padding: 12px 15px; border: 1px solid #F0F0F0; border-radius: 12px; background: #FAFAFA; font-size: 0.95rem; outline: none; }
+        .edit-input:focus { border-color: var(--rose); background: #fff; }
+        .save-btn { background: var(--rose); color: white; border: none; padding: 15px 40px; border-radius: 50px; font-weight: 600; cursor: pointer; width: 100%; font-size: 1rem; margin-top: 20px; }
+        .back-link { display: block; margin-top: 20px; color: #BBB; text-decoration: none; font-size: 0.85rem; }
+    </style>
 </head>
 <body>
+
     <?php include("header.php"); ?>
 
-    <main class="container main-content">
-        <div class="profile-container">
-            <h2>Edit Profile</h2>
-            <?php if (!empty($message)) { ?>
-                <div class="message">
-                    <?php echo $message; ?>
-                </div>
-            <?php } ?>
+    <div class="admin-wrapper">
+        <main class="main-content">
+            <div class="card">
+                <form id="profileForm" method="POST">
+                    <div id="photo-area">
+                        <?php 
+                            $photo = $user['userphoto'];
+                            $img = (!empty($photo)) ? "uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        ?>
+                        <img src="<?php echo $img; ?>" class="user-big-photo" id="currentPhoto" onclick="document.getElementById('upload').click()">
+                    </div>
 
-            <form action="edit-profile.php" method="post" class="profile-form">
-                <div class="form-group">
-                    <label for="name">User Name:</label>
-                    <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($user_data['name']); ?>" required>
-                </div>
+                    <div id="upload-demo"></div>
+                    <input type="file" id="upload" style="display:none;" accept="image/*">
+                    <input type="hidden" name="image_base64" id="image_base64">
 
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($user_data['email']); ?>" required>
-                </div>
+                    <p id="help-text" style="font-size: 0.75rem; color: var(--rose); margin-bottom: 25px;">Click photo to choose & adjust</p>
 
-                <div class="form-group">
-                    <label for="address">Address:</label>
-                    <textarea id="address" name="address" rows="4" required><?php echo htmlspecialchars($user_data['address']); ?></textarea>
-                </div>
+                    <div class="info-row">
+                        <span class="info-label">Full Name</span>
+                        <input type="text" name="name" class="edit-input" value="<?php echo $user['name']; ?>" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="mobile_number">Mobile Number:</label>
-                    <input type="text" id="mobile_number" name="mobile_number" value="<?php echo htmlspecialchars($user_data['mobile_number']); ?>" required>
-                </div>
+                    <!-- Naya Gmail Input -->
+                    <div class="info-row">
+                        <span class="info-label">Email Address</span>
+                        <input type="email" name="gmail" class="edit-input" value="<?php echo $user['gmail']; ?>" required>
+                    </div>
 
-                <div class="form-actions">
-                    <button type="submit" name="update_profile" class="update-button">Update Profile</button>
-                    <a href="after-login.php" class="cancel-button">Cancel</a>
-                </div>
-            </form>
-        </div>
-    </main>
+                    <div class="info-row">
+                        <span class="info-label">Mobile</span>
+                        <input type="text" name="mobilenumber" class="edit-input" value="<?php echo $user['mobilenumber']; ?>" required>
+                    </div>
 
+                    <div class="info-row">
+                        <span class="info-label">Address</span>
+                        <input type="text" name="address" class="edit-input" value="<?php echo $user['address']; ?>">
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-label">City</span>
+                        <input type="text" name="city" class="edit-input" value="<?php echo $user['city']; ?>">
+                    </div>
+
+                    <button type="button" id="submit-btn" class="save-btn">Update Profile</button>
+                    <a href="my-profile.php" class="back-link">Cancel</a>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.5/croppie.min.js"></script>
+
+    <script>
+        var $uploadCrop;
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#photo-area').hide();
+                    $('#upload-demo').show();
+                    $uploadCrop.croppie('bind', { url: e.target.result });
+                    $('#help-text').text("Drag to adjust your photo");
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $uploadCrop = $('#upload-demo').croppie({
+            viewport: { width: 150, height: 150, type: 'circle' },
+            boundary: { width: 250, height: 250 },
+            showZoomer: true
+        });
+
+        $('#upload').on('change', function () { readFile(this); });
+
+        $('#submit-btn').on('click', function (ev) {
+            if ($('#upload').val()) {
+                $uploadCrop.croppie('result', {
+                    type: 'base64',
+                    size: 'viewport'
+                }).then(function (resp) {
+                    $('#image_base64').val(resp);
+                    $('#profileForm').submit();
+                });
+            } else {
+                $('#profileForm').submit();
+            }
+        });
+    </script>
     <?php include("footer.php"); ?>
 </body>
 </html>

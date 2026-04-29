@@ -1,0 +1,103 @@
+ 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-bg: #F0E4D3;
+            --white: #ffffff;
+            --accent-color: #D9A299;
+            --dark-text: #222;
+            --input-border: #ddd;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-bg);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-card {
+            background-color: var(--white);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--dark-text);
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--input-border);
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(217, 162, 153, 0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            background-color: #c78f85;
+            transform: translateY(-2px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Branding link */
+        .footer-text {
+            margin-top: 25px;
+            font-size: 0.8rem;
+            color: #999;
+        }

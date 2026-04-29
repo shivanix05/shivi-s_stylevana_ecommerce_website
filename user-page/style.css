@@ -156,7 +156,35 @@ body {
     color:black;
     font-size: 1.2em;
 }
+.cart-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: #ff4757;
+    color: white;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+}
+/* Badge styling */
+.badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #D9A299; /* Aapki theme ka color */
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    font-weight: bold;
+    border: 2px solid white;
+}
 
+/* Agar koi extra icon header ke bahar aa raha hai toh use hide karne ke liye */
+body > i.fa-shopping-bag {
+    display: none;
+}
 /* Hero Section */
 .hero-section {
     display: flex;

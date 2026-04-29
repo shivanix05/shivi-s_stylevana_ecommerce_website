@@ -1,391 +1,260 @@
+<?php 
+require_once __DIR__ . "/config.php"; 
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - Shivi's Stylevana</title>
-    <!-- Fonts and icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-    --primary-bg: #F0E4D3;
-    --primary-text: #333;
-    --accent-color: #D9A299;
-    --secondary-accent: #DCC5B2;
-    --dark-text: #222;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--primary-bg);
-    color: var(--primary-text);
-    line-height: 1.6;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-/* Header Styling */
-.main-header {
-    background: #e0dada;
-    padding: 5px 0;
-    border-bottom: 1px solid #e4c4c4;
-}
-
-.header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  
-}
-
-.logo a {
-    font-family: 'Playfair Display', serif;
-    font-size: 2em;
-    font-weight: 700;
-    color: black;
-    text-decoration: none;
-}
-
-.logo span {
-    font-size: 0.8em;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 300;
-    display: block;
-    margin-top: -5px;
-    color: #888;
-}
-.img-logo{
-    height: 5em;
-    margin: right 0%;
-}
-.logo{
-     display: flex;
     
-}
-.btn-login{
-    color: white;
-    text-decoration: none;
-}
-.search-container {
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-pink: #D9A299;
+            --soft-bg: #fdfaf9;
+            --text-dark: #333;
+            --glass: rgba(255, 255, 255, 0.7);
+        }
+
+        body {
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background-color: var(--soft-bg); color: var(--text-dark);
+            overflow-x: hidden;
             position: relative;
+        }
+
+        /* --- STATIC HEADER (Header fixed nahi rahega, scroll hoga) --- */
+        header {
+            position: static; 
+            background: #fff;
             width: 100%;
-            max-width: 400px;
+            z-index: 10;
         }
 
- .search-container input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            font-family: 'Poppins', sans-serif;
+        /* --- BUBBLE EFFECT --- */
+        .bubble-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; overflow: hidden; pointer-events: none;
+        }
+        .bubble {
+            position: absolute; background: var(--primary-pink);
+            border-radius: 50%; opacity: 0.1;
+            animation: moveUp 15s infinite ease-in-out;
+        }
+        @keyframes moveUp {
+            0% { transform: translateY(110vh) scale(1); opacity: 0.1; }
+            50% { opacity: 0.3; }
+            100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
         }
 
- .search-container button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--dark-text);
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-
-.main-nav {
-    display: flex;
-    gap: 20px;
-    }
-
-.main-nav a {
-    text-decoration: none;
-    color: var(--dark-text);
-    font-weight: 550;
-    padding: 5px 10px;
-    position: relative;
-  
-}
-.options{
-    border:#c7a9a9 0.5px silver;
-
-}
-
-.main-nav a::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%) scaleX(0);
-    width: 100%;
-    height: 2px;
-    background-color: var(--accent-color);
-    transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-    transform: translateX(-50%) scaleX(1);
-}
-
-.header-icons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-   
-}
-
-.login-btn {
-    background-color: var(--accent-color);
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.login-btn:hover {
-    background-color: #ada39e;
-}
-
-.header-icons .icon-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color:black;
-    font-size: 1.2em;
-}
-
-main {
-            padding: 3rem 0;
-            flex-grow: 1;
-        }
-
-.section {
-            background-color: #fff;
-            padding: 2.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+        /* --- NEW HERO SECTION --- */
+        .hero-banner {
+            height: 70vh; 
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+            url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1500&q=80');
+            background-size: cover; 
+            background-position: center;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
             text-align: center;
+            color: #fff;
         }
-        
-        h1, h2 {
-            text-align: center;
-            color: var(--dark-text);
+        .hero-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            padding: 50px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            max-width: 700px;
+            animation: fadeIn 1.5s ease;
         }
-        
-        h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+        .hero-content h1 { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 4rem; 
+            margin-bottom: 10px; 
+            font-weight: 900;
         }
-        
-        h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 1rem;
-        }
-        
-        main p {
-            font-size: 1rem;
-            line-height: 1.625;
-            color: var(--primary-text);
-            margin-bottom: 1.5rem;
-        }
-        
-        .image-container {
-            margin: 2rem auto;
-            max-width: 600px;
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .hero-content p { 
+            font-size: 1.2rem; 
+            letter-spacing: 2px; 
+            text-transform: uppercase;
         }
 
-        .image-container img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        /* --- CONTENT SECTION --- */
+        .content-section { max-width: 1100px; margin: 80px auto; padding: 0 20px; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-text h2 { font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary-pink); }
+        .about-text p { font-size: 1.05rem; line-height: 1.8; color: #666; }
+        .main-img { width: 100%; border-radius: 20px; box-shadow: 20px 20px 0 var(--primary-pink); }
 
-        footer {
-            background-color: var(--secondary-accent);
-            color: var(--dark-text);
-            padding: 2rem 0;
-            margin-top: auto;
-            text-align: center;
+        /* --- SHINY BUTTON --- */
+        .btn-shiny {
+            position: relative; display: inline-block; margin-top: 20px;
+            padding: 12px 35px; background: var(--primary-pink);
+            color: #fff; text-decoration: none; border-radius: 50px;
+            font-weight: 600; overflow: hidden; border: none;
+            box-shadow: 0 4px 15px rgba(217, 162, 153, 0.4);
+            transition: 0.3s;
         }
+        .btn-shiny::before {
+            content: ''; position: absolute; top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+            transition: 0.5s;
+        }
+        .btn-shiny:hover::before { left: 100%; }
+        .btn-shiny:hover { transform: scale(1.05); }
 
-        footer .social-icons a {
-            color: var(--dark-text);
-            font-size: 1.25rem;
-            transition: color 0.3s;
-            margin: 0 0.5rem;
+        /* --- FOUNDER ROW --- */
+        .founder-row {
+            display: flex; align-items: center; gap: 50px; margin-bottom: 80px;
+            opacity: 0; transform: translateY(30px); transition: 1s ease-out;
         }
-        
-        footer .social-icons a:hover {
-            color: var(--accent-color);
-        }
-        
-        .terms-details-container {
-            text-align: left;
-        }
+        .founder-row.visible { opacity: 1; transform: translateY(0); }
+        .row-left { flex-direction: row; }
+        .row-right { flex-direction: row-reverse; }
 
-        details {
-            background-color: var(--primary-bg);
-            border: 1px solid var(--secondary-accent);
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin-top: 1rem;
+        .founder-img-box { flex: 1; }
+        .founder-img-box img {
+            width: 100%; border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            filter: grayscale(20%); transition: 0.5s;
         }
+        .founder-img-box:hover img { filter: grayscale(0%); transform: scale(1.02); }
 
-        summary {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--dark-text);
-            cursor: pointer;
-        }
-        
-        details p {
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: var(--primary-text);
-        }
-        
-        /* Media Queries for Responsiveness */
-        @media (min-width: 768px) {
-            h1 { font-size: 3rem; }
-            .grid-container {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .search-bar, nav {
-                display: none;
-            }
-            header .flex-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
+        .founder-info { flex: 1.5; }
+        .founder-info h2 { font-family: 'Playfair Display'; font-size: 2.5rem; color: var(--primary-pink); margin: 10px 0; }
+        .founder-info h4 { text-transform: uppercase; letter-spacing: 2px; color: #888; }
+        .founder-info p { line-height: 1.8; color: #666; }
+
+        /* --- TRUST BADGES --- */
+        .trust-badges { display: flex; justify-content: space-around; padding: 60px 0; background: var(--primary-pink); color: #fff; text-align: center; }
+        .badge i { font-size: 2.5rem; margin-bottom: 10px; }
+
+        /* --- MEDIA GRID --- */
+        .media-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 40px; }
+        .media-item { border-radius: 15px; overflow: hidden; height: 350px; background: #eee; }
+        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; }
+
+        .section-head { text-align: center; margin-bottom: 60px; }
+
+        @media (max-width: 850px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .about-grid, .founder-row, .row-right { flex-direction: column; text-align: center; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-     <header class="main-header">
-        <div class="container header-content">
-           
-            <div class="logo">
-                <div> <img  src="logo.png" class="img-logo"></div>
-               <a href="#">Shivi's<span>Stylevana</span></a>
-            </div>
+    <div class="bubble-bg">
+        <div class="bubble" style="width:80px; height:80px; left:10%;"></div>
+        <div class="bubble" style="width:120px; height:120px; left:40%; animation-delay:5s;"></div>
+        <div class="bubble" style="width:60px; height:60px; left:70%; animation-delay:2s;"></div>
+    </div>
 
-            <nav class="main-nav">
-                <a href="index.php">Home</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-            </nav>
+    <?php include("header.php"); ?>
 
-            <div class="header-icons">
-                <button class="login-btn"> <a href="login.php" class="btn-login">Login / Sign Up </a></button>
-                 <div class="header-center">
-                <div class="search-container">
-                    <input type="text" placeholder="Search for products...">
-                    <button type="button"><i class="fas fa-search"></i></button>
-                </div>
-            </div>
-                <button class="icon-btn"><i class="fas fa-search"></i></button>
-                <button class="icon-btn"><i class="fas fa-user"></i></button>
-                <button class="icon-btn"><i class="fas fa-shopping-bag"></i></button>
-            </div>
-
+    <section class="hero-banner">
+        <div class="hero-content">
+            <p>Welcome to Stylevana</p>
+            <h1>Our Story</h1>
+            <div style="width: 50px; height: 2px; background: #fff; margin: 20px auto;"></div>
+            <p style="font-size: 0.9rem; letter-spacing: 4px;">Since 2024</p>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="container">
-        <h1>About Us</h1>
-        <p style="text-align: center;">Welcome to Shivi's Stylevana, where fashion meets passion. We believe that style is more than just clothing; it's a form of self-expression.</p>
-        
-        <div class="section">
-            <h3>Our Story</h3>
-            <p>Founded in 2025 by Shivi, our brand was born out of a desire to create a fashion line that is both elegant and accessible. Starting with a small collection of handcrafted items, Shivi's Stylevana quickly grew into a beloved online destination for unique and timeless pieces. We are committed to celebrating individuality and empowering our customers to feel confident in their own skin.</p>
-            <div class="image-container">
-                <img src="" alt="Our Story">
+    <div class="content-section">
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>Defining Your Style</h2>
+                <p>Welcome to <b>Shivi's Stylevana</b>. We believe every essential should be elegant. Our journey is about bringing utility and beauty together.</p>
+                <a href="terms.php" class="btn-shiny">Terms & Policies</a>
+                <a href="privacy.php" class="btn-shiny" style="margin-left:10px;">Privacy Policy</a>
+            </div>
+            <div class="image-stack">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTdcOwO5LgJTQ3u4xd-s0pzLQBuaw7Puz6Sg&s" alt="Boutique" class="main-img">
             </div>
         </div>
+    </div>
 
-        <div class="section">
-            <h3>Our Mission</h3>
-            <p>Our mission is to provide high-quality, stylish, and comfortable fashion that inspires confidence. We are dedicated to offering a curated selection of products that reflect the latest trends while remaining true to our core values of quality, creativity, and customer satisfaction.</p>
-            <div class="image-container">
-                <img src="https://placehold.co/600x350/DCC5B2/fff?text=Our+Mission" alt="Our Mission">
+    <div class="content-section">
+        <div class="section-head">
+            <h2 style="font-family: 'Playfair Display'; font-size: 2.8rem;">Meet the Visionaries</h2>
+        </div>
+
+        <div class="founder-row row-left scroll-reveal">
+            <div class="founder-img-box">
+                <img src="https://mooddp.com/wp-content/uploads/2025/12/cultural-vibe-in-indian-girl-dp.jpg" alt="Shivani Mishra">
+            </div>
+            <div class="founder-info">
+                <h4>Founder & CEO</h4>
+                <h2>Shivani Mishra</h2>
+                <p>Shivani Mishra started Stylevana with a vision to redefine how we perceive daily essentials. Every detail of the brand reflects elegance and premium quality.</p>
+                <a href="terms.php" class="btn-shiny">Terms of Service</a>
             </div>
         </div>
-        
-        <div class="section">
-            <h3>Our Values</h3>
-            <ul style="list-style-type: disc; text-align: left; max-width: 600px; margin: 0 auto; padding-left: 1.5rem;">
-                <li>**Quality:** We use only the finest materials to ensure our products are durable and luxurious.</li>
-                <li>**Creativity:** Our designs are unique and crafted with a passion for artistic expression.</li>
-                <li>**Customer Focus:** Your satisfaction is our top priority. We are here to help you find the perfect style.</li>
-                <li>**Sustainability:** We are committed to ethical sourcing and sustainable practices to protect our planet.</li>
-            </ul>
-        </div>
-        
-        <div class="section terms-details-container">
-            <h3>Terms and Conditions</h3>
-            <details>
-                <summary>Terms of Service Summary</summary>
-                <p>By using Shivi's Stylevana, you agree to our terms. This includes respecting our intellectual property, using the site lawfully, and adhering to our return policy. We reserve the right to modify these terms at any time. Your continued use of the site signifies your acceptance of any changes.</p>
-            </details>
-            <details>
-                <summary>Detailed Terms and Conditions</summary>
-                <p>Welcome to Shivi's Stylevana. These Terms and Conditions govern your use of our website and services. By accessing or using the site, you agree to be bound by these terms. If you do not agree to all the terms and conditions, you may not access the site or use any services.</p>
-                <p><strong>1. Intellectual Property:</strong> The content on this website, including text, graphics, logos, images, and software, is the property of Shivi's Stylevana and is protected by copyright and other intellectual property laws. You may not use, reproduce, or distribute any content without our express written permission.</p>
-                <p><strong>2. User Conduct:</strong> You agree to use our website for lawful purposes only. You are prohibited from posting or transmitting any material that is unlawful, harmful, threatening, abusive, or otherwise objectionable.</p>
-                <p><strong>3. Product Information:</strong> We strive to ensure all product descriptions, images, and prices are accurate. However, errors may occur. We reserve the right to correct any errors and to change or update information at any time without prior notice.</p>
-                <p><strong>4. Limitation of Liability:</strong> Shivi's Stylevana will not be liable for any damages, including but not limited to direct, indirect, incidental, or consequential damages, arising from your use of this website or our products.</p>
-                <p><strong>5. Governing Law:</strong> These terms and conditions are governed by and construed in accordance with the laws of [Your Jurisdiction], and you irrevocably submit to the exclusive jurisdiction of the courts in that State or location.</p>
-            </details>
-        </div>
-    </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Shivi's Stylevana. All Rights Reserved.</p>
-            <div class="social-icons">
-                <a href="#"><i class="fab fa-facebook-f"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-pinterest-p"></i></a>
+        <div class="founder-row row-right scroll-reveal">
+            <div class="founder-img-box">
+                <img src="https://images.squarespace-cdn.com/content/v1/64af2e05035dfb736a00fa2a/95ef0923-5fef-402f-9b66-2236e0e75fee/BBBeauty_Boutique_Team.jpg" alt="Creative Crew">
+            </div>
+            <div class="founder-info">
+                <h4>Creative Director</h4>
+                <h2>The Creative Crew</h2>
+                <p>Behind every great design is a team of visionaries. Our crew ensures that your Stylevana experience is seamless and stylish.</p>
+                <a href="privacy.php" class="btn-shiny">Our Privacy Policies</a>
             </div>
         </div>
-    </footer>
+    </div>
+
+    <section class="trust-badges">
+        <div class="badge"><i class="fas fa-check-circle"></i><br>100% Original</div>
+        <div class="badge"><i class="fas fa-truck"></i><br>Fast Shipping</div>
+        <div class="badge"><i class="fas fa-heart"></i><br>5000+ Happy Users</div>
+    </section>
+
+    <div class="content-section">
+        <div class="section-head">
+            <h2>Stylevana Diaries</h2>
+            <p>Moments captured by our community</p>
+        </div>
+        <div class="media-grid">
+            <div class="media-item"><img src="https://www.shutterstock.com/image-photo/happy-woman-curly-hair-glasses-600nw-2693353677.jpg" alt="User"></div>
+            <div class="media-item">
+                <video src="brandvedio.mp4" autoplay muted loop></video>
+            </div>
+            <div class="media-item"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQz_IGsgGtMq8FX0uMRQyFRP2PNsWkIfgGUSw&s" alt="User"></div>
+        </div>
+        <br>
+        <div class="media-item">
+                <video src="vedio2.mp4" autoplay muted loop></video>
+        </div>
+    </div>
+
+    <?php include("footer.php"); ?>
+
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+    </script>
 
 </body>
 </html>

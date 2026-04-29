@@ -1,0 +1,25 @@
+ :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; --gray: #7A7A7A; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        .admin-wrapper { display: flex; flex: 1; padding: 40px 50px; gap: 30px; }
+        .main-content { flex: 1; }
+        
+        .edit-card { background: var(--white); border-radius: 30px; padding: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.02); }
+        h1 { margin-bottom: 25px; font-size: 2rem; color: var(--text); }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+        
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.75rem; color: #BBB; text-transform: uppercase; letter-spacing: 1px; }
+        input, select, textarea { width: 100%; padding: 12px 15px; border: 1px solid #F0F0F0; border-radius: 12px; background: #FAFAFA; outline: none; font-size: 0.9rem; transition: 0.3s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--rose); background: #fff; box-shadow: 0 0 0 4px rgba(217, 168, 153, 0.1); }
+
+        .current-img { width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 2px solid var(--bg); margin-bottom: 10px; }
+        .btn-update { background: var(--rose); color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: 600; font-size: 1rem; cursor: pointer; margin-top: 25px; transition: 0.3s; }
+        .btn-update:hover { opacity: 0.9; transform: translateY(-2px); }
+        
+        .back-btn { display: inline-block; margin-top: 20px; color: var(--gray); text-decoration: none; font-size: 0.85rem; }
+        .back-btn:hover { color: var(--rose); }
+        .stock-box { background: #FFF9F7; padding: 20px; border-radius: 15px; border: 1px dashed var(--rose); }
+   

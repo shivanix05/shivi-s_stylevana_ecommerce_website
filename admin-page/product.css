@@ -1,0 +1,35 @@
+
+        :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; --gray: #7A7A7A; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Layout Container */
+        .admin-wrapper { display: flex; flex: 1; padding: 40px 50px; gap: 30px; }
+        
+        .main-content { flex: 1; }
+        .inventory-card { background: var(--white); border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow-x: auto; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; font-size: 0.75rem; color: #BBB; text-transform: uppercase; border-bottom: 2px solid var(--bg); letter-spacing: 1px; }
+        td { padding: 15px; border-bottom: 1px solid #F9F9F9; font-size: 0.85rem; vertical-align: middle; }
+        
+        .prod-img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; background: #eee; }
+        
+        /* Stock Badges */
+        .badge { padding: 6px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .in-stock { background: #E8F5E9; color: #2E7D32; }
+        .low-stock { background: #FFF3E0; color: #E65100; }
+        .out-of-stock { background: #FFEBEE; color: #C62828; }
+
+        .btn-add { background: var(--rose); color: white; padding: 12px 25px; border-radius: 15px; text-decoration: none; font-weight: 600; transition: 0.3s; font-size: 0.9rem; }
+        .btn-add:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(217, 168, 153, 0.3); }
+        
+        /* Action Buttons */
+        .action-btn { padding: 8px 14px; border-radius: 10px; text-decoration: none; font-size: 0.75rem; font-weight: 600; transition: 0.3s; display: inline-block; }
+        .edit { background: #F4EBE4; color: #8C6A60; margin-right: 5px; }
+        .delete { background: #FFE5E5; color: #D32F2F; border: none; cursor: pointer; }
+        .action-btn:hover { filter: brightness(0.95); transform: scale(1.05); }
+
+        h1 { font-family: 'Playfair Display'; font-size: 2.2rem; }

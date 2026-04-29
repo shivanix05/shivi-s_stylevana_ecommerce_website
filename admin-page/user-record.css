@@ -1,0 +1,45 @@
+  :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        .admin-wrapper { display: flex; flex: 1; padding: 30px 50px; gap: 30px; }
+        .main-content { flex: 1; }
+
+        /* Header & Search Section */
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        h1 { font-family: 'Playfair Display'; font-size: 2.2rem; color: #333; }
+        
+        .search-box { display: flex; gap: 10px; background: var(--white); padding: 8px 15px; border-radius: 50px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .search-box input { border: none; outline: none; padding: 5px 10px; width: 250px; font-size: 0.9rem; }
+        .search-btn { background: var(--rose); color: white; border: none; padding: 8px 20px; border-radius: 50px; cursor: pointer; transition: 0.3s; }
+        .search-btn:hover { background: #c99385; }
+
+        /* Table Card */
+        .customer-card { background: var(--white); border-radius: 25px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        
+        thead { background: #FAF7F4; }
+        th { text-align: left; padding: 18px 15px; font-size: 0.75rem; color: #BBB; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid var(--bg); }
+        
+        td { padding: 18px 15px; border-bottom: 1px solid #F9F9F9; font-size: 0.88rem; vertical-align: middle; transition: 0.2s; }
+        tr:hover td { background: #FFFCFA; }
+
+        /* User Profile Style */
+        .user-info-cell { display: flex; align-items: center; gap: 15px; }
+        .user-img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg); background: #eee; }
+        .user-name { font-weight: 600; color: #333; display: block; }
+        .user-sno { font-size: 0.7rem; color: #BBB; }
+
+        /* Status Badge */
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; background: #f0f0f0; color: #999; }
+        
+        /* Action Button */
+        .view-link { 
+            background: #F8F3ED; color: var(--rose); text-decoration: none; 
+            padding: 8px 18px; border-radius: 50px; font-size: 0.8rem; 
+            font-weight: 600; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px; 
+        }
+        .view-link:hover { background: var(--rose); color: white; }
+
+        .empty-state { padding: 50px; text-align: center; color: #BBB; font-style: italic; }

@@ -1,4 +1,4 @@
-<?php include("config.php");
+<?php require_once __DIR__ . "/config.php";
 session_start();
 if (!isset($_SESSION["user"])){
     header("location:login.php");
@@ -206,7 +206,7 @@ if (!isset($_SESSION["user"])){
                 </div>
                 <div class="product-details">
                     <span class="brand-name">Fenty Beauty</span>
-                    <h3 class="product-name"><?php echo $row['productName'] ; ?></h3>
+                    <h3 class="product-name"><?php echo $row['productname'] ; ?></h3>
                     <div class="price-section">
                         <span class="current-price"><?php echo $row['productprice'];?></span>
                         <span class="original-price">₹1,999</span>

@@ -1,0 +1,25 @@
+:root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; --gray: #7A7A7A; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Layout Wrapper */
+        .admin-wrapper { display: flex; flex: 1; padding: 40px 50px; gap: 30px; }
+        
+        .main-content { flex: 1; }
+        .detail-card { background: var(--white); border-radius: 25px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .card-body { padding: 40px; }
+        .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; }
+        
+        .info-label { font-size: 0.7rem; color: #BBB; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+        .info-val { font-size: 0.95rem; margin-bottom: 20px; font-weight: 500; }
+        
+        /* Status Box */
+        .status-update-box { background: #FDFBF9; padding: 30px; border-radius: 20px; border: 1px solid #F2EBE4; margin-top: 30px; }
+        select, input { width: 100%; padding: 12px; border: 1px solid #EEE; border-radius: 12px; margin-top: 8px; outline: none; background: #fff; font-size: 0.9rem; }
+        input:focus, select:focus { border-color: var(--rose); }
+
+        .btn-save { background: var(--rose); color: white; border: none; padding: 15px; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: 0.3s; width: 100%; font-size: 1rem; }
+        .btn-save:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        .back-link { text-decoration: none; color: var(--rose); font-size: 0.9rem; font-weight: 500; display: inline-block; margin-bottom: 20px; }

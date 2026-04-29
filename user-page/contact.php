@@ -1,452 +1,233 @@
-<?php include("config.php");
+<?php 
+require_once __DIR__ . "/config.php"; 
 session_start();
+
+// Agar user login nahi hai to login page par bhej do
 if (!isset($_SESSION["user"])){
     header("location:login.php");
-    exit();
+    exit();    
+}
+
+$user_email = $_SESSION['user']; 
+
+// --- FORM SUBMISSION LOGIC ---
+if(isset($_POST['messagebtn'])) {
+    // SQL Injection se bachne ke liye escaping
+    $name = mysqli_real_escape_string($cn, $_POST['name']);
+    $gmail = mysqli_real_escape_string($cn, $_POST['gmail']);
+    $subject = mysqli_real_escape_string($cn, $_POST['subject']);
+    $message = mysqli_real_escape_string($cn, $_POST['message']);
+    $feedback = mysqli_real_escape_string($cn, $_POST['feedback']);
+
+    // INSERT query aapki 'userfeedback' table ke liye
+    // admin_reply ko shuruat mein empty choda hai
+    $str = "INSERT INTO userfeedback (name, gmail, subject, message, feedback, admin_reply) VALUES ('$name', '$gmail', '$subject', '$message', '$feedback', '')";
+    
+    if(mysqli_query($cn, $str)) {
+        echo "<script>alert('Message Sent Successfully! Check the History section below for updates.'); window.location.href='contact.php';</script>";
+    } else {
+        echo "<script>alert('Something went wrong: " . mysqli_error($cn) . "');</script>";
+    }
 }
 ?>
 
-<?php
-    if (isset($_POST["logoutbtn"])){
-        session_destroy();
-        header("location:login.php");
-        exit();
-    }
-    ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Shivi's Stylevana</title>
-    <!-- Fonts and icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-:root {
-            --primary-bg: #F0E4D3;
-            --primary-text: #333;
-            --accent-color: #D9A299;
-            --secondary-accent: #DCC5B2;
-            --dark-text: #222;
-        }
-
-body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--primary-text);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
- .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
-
-/* Header Styling */
- .main-header {
-            background: #fff;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-.header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-.logo a {
-    font-family: 'Playfair Display', serif;
-    font-size: 2em;
-    font-weight: 700;
-    color: black;
-    text-decoration: none;
-}
-
-.logo span {
-    font-size: 0.8em;
-    font-family: 'Poppins', sans-serif;
-    font-weight: 300;
-    display: block;
-    margin-top: -5px;
-    color: #888;
-}
-.img-logo{
-    height: 5.5em;
-    margin: right 0%;
-}
-.logo{
-     display: flex;
     
-}
-.main-nav a::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%) scaleX(0);
-    width: 100%;
-    height: 2px;
-    background-color: peachpuff;
-    transition: transform 0.3s ease;
-}
-
-.main-nav a:hover::after {
-    transform: translateX(-50%) scaleX(1);
-}
-.categories{
-    text-decoration: none;
-    border: none;
-      font-size:17px;
-    font-weight:50px;
-}
-
-.header-center {
-            flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-bg: #FDF8F5;
+            --accent-color: #D9A299;
+            --dark-text: #222;
+            --soft-pink: #fff0f3;
+            --success-green: #03a685;
         }
 
-.search-container {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background-color: var(--primary-bg); 
+            color: #333; 
         }
 
- .search-container input {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            font-family: 'Poppins', sans-serif;
-        }
-
- .search-container button {
-            position: absolute;
-            right: 5px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--dark-text);
-            font-size: 1.2em;
-            cursor: pointer;
-        }
-.header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
- .main-nav {
-            display: flex;
-            gap: 20px;
-        }
- .main-nav a {
-            text-decoration: none;
-            color: var(--dark-text);
-            font-weight: 500;
-            padding: 5px 10px;
-            position: relative;
-        }
-.option{
-    border:none;
-}
-.user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
         
-.user-profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--accent-color);
-        }
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; text-align: center; margin-bottom: 10px; color: var(--dark-text); }
+        .sub-text { text-align: center; margin-bottom: 50px; color: #777; font-size: 1.1rem; }
 
-.user-profile p {
-            font-weight: 600;
-            color: var(--dark-text);
-            margin: 0;
-        }
-
-.header-icons .icon-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--dark-text);
-            font-size: 1.2em;
-        }
-
-
-main {
-            padding: 3rem 0;
-            flex-grow: 1;
-        }
-
-h1, h2 {
-            text-align: center;
-            color: var(--dark-text);
-        }
-
-h1 {
-            font-size: 2.25rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
+        .grid-container { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; }
         
- h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
+        .contact-form-section, .contact-info-section, .history-section {
+            background: #fff; padding: 35px; border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         }
 
-main p {
-            text-align: center;
-            color: var(--primary-text);
-            margin-bottom: 3rem;
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 14px; color: var(--dark-text); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 18px; border: 1px solid #eee;
+            border-radius: 15px; background: #fafafa; font-family: inherit; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--accent-color); background: #fff; box-shadow: 0 0 0 4px var(--soft-pink);
         }
 
-.grid-container {
-            display: grid;
-            gap: 3rem;
-            align-items: start;
+        .submit-btn {
+            width: 100%; padding: 16px; background: var(--accent-color);
+            color: white; border: none; border-radius: 50px;
+            font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(217,162,153,0.3);
         }
+        .submit-btn:hover { transform: translateY(-3px); background: #c98e84; }
 
-.contact-form-section, .contact-info-section {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+        .contact-detail { display: flex; gap: 18px; margin-bottom: 30px; }
+        .contact-detail i { color: var(--accent-color); font-size: 1.4rem; margin-top: 5px; }
+        .contact-detail h3 { font-size: 17px; margin-bottom: 5px; color: var(--dark-text); }
+        .contact-detail p { font-size: 15px; color: #666; line-height: 1.5; }
+
+        .map-placeholder { border-radius: 20px; overflow: hidden; margin-top: 25px; border: 1px solid #eee; }
+
+        .history-section { margin-top: 50px; grid-column: span 2; }
+        .history-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 30px; border-bottom: 2px solid var(--soft-pink); padding-bottom: 10px; }
         
- .contact-info-section {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .query-card { 
+            border: 1px solid #f0f0f0; background: #fdfcfb; 
+            padding: 20px; margin-bottom: 20px; border-radius: 20px;
+            transition: 0.3s;
+        }
+        .query-card:hover { border-color: var(--accent-color); }
+
+        .status-badge { font-size: 11px; padding: 5px 12px; border-radius: 50px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .pending { background: #fff3cd; color: #856404; }
+        .replied { background: #d4edda; color: #155724; }
+
+        .admin-response { 
+            background: #f0fdf9; padding: 20px; border-radius: 15px; 
+            margin-top: 15px; border: 1px dashed var(--success-green); 
         }
 
- .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-.form-group label {
-            display: block;
-            color: var(--primary-text);
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-.form-group input, .form-group textarea {
-            width: 100%;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--secondary-accent);
-            border-radius: 0.5rem;
-            background-color: #fff;
-            outline: none;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-.form-group input:focus, .form-group textarea:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 2px rgba(217, 162, 153, 0.5);
-        }
-        
-.form-group textarea {
-            resize: vertical;
-        }
-
- .submit-btn {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--accent-color);
-            color: #fff;
-            font-weight: 600;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s, opacity 0.3s;
-        }
-
-.submit-btn:hover {
-            opacity: 0.8;
-        }
-
-.contact-details {
-            margin-bottom: 2rem;
-        }
-
-.contact-detail {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-.contact-detail i {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-            margin-top: 0.25rem;
-        }
-
- .contact-detail h3 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-
-.contact-detail p {
-            font-size: 1rem;
-            color: var(--primary-text);
-            text-align: left;
-            margin: 0;
-        }
-
-.map-placeholder {
-            margin-top: 2rem;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-.map-placeholder img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Media Queries for Responsiveness */
-        @media (min-width: 768px) {
-            h1 { font-size: 3rem; }
-            h2 { font-size: 2rem; }
-            .grid-container {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .search-bar {
-                display: none;
-            }
-            nav {
-                display: none;
-            }
-            header .flex-container {
-                flex-direction: column;
-                gap: 1rem;
-            }
-        }
-        
-        @media (min-width: 1024px) {
-            .user-info p {
-                display: block;
-            }
+        @media (max-width: 850px) { 
+            .grid-container { grid-template-columns: 1fr; }
+            .history-section { grid-column: span 1; }
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
-        <?php include("header.php");?>
-    <!-- Main Content -->
+<body>
+
+    <?php include("header.php"); ?>
+
     <main class="container">
         <h1>Contact Us</h1>
-        <p>We would love to hear from you. Please fill out the form below or reach out to us using the contact details provided.</p>
+        <p class="sub-text">Have a question or need help with your order? We're here for you!</p>
 
         <div class="grid-container">
-            <!-- Contact Form Section -->
             <div class="contact-form-section">
-                <h2>Send us a message</h2>
-                <form id="contactForm" method="post">
+                <h2 style="margin-bottom: 25px; font-size: 22px;">Send a Message</h2>
+                <form method="post">
                     <div class="form-group">
-                        <label for="name">Your Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Your Email</label>
-                        <input type="email" id="email" name="gmail" placeholder="Enter your email address" required>
+                        <label>Your Name</label>
+                        <input type="text" name="name" placeholder="Enter your name" required>
                     </div>
                     <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                        <label>Your Email</label>
+                        <input type="email" name="gmail" value="<?php echo $user_email; ?>" readonly style="color: #999; cursor: not-allowed;">
                     </div>
                     <div class="form-group">
-                        <label for="message">Your Message</label>
-                        <textarea id="message" name="message" rows="5" placeholder="Type your message here..." required></textarea>
+                        <label>Subject</label>
+                        <input type="text" name="subject" placeholder="What is this regarding?" required>
                     </div>
-                     <div class="form-group">
-                        <label for="message">Feedback</label>
-                        <textarea id="message" name="feedback" rows="5" placeholder="Please give your feedback here..."></textarea>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" rows="4" placeholder="Write your query here..." required></textarea>
                     </div>
-                    <button type="submit" class="submit-btn" name="messagebtn">Send Message</button>
+                    <div class="form-group">
+                        <label>Feedback (Optional)</label>
+                        <textarea name="feedback" rows="2" placeholder="Anything else you'd like to share?"></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" name="messagebtn">SEND MESSAGE 💌</button>
                 </form>
             </div>
 
-            <!-- Contact Information Section -->
             <div class="contact-info-section">
-                <div class="contact-details">
-                    <h2>Our Details</h2>
-                    <div class="contact-detail">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h3>Address</h3>
-                            <p>stylevana shop</p>
-                        </div>
-                    </div>
-                    <div class="contact-detail">
-                        <i class="fas fa-phone-alt"></i>
-                        <div>
-                            <h3>Phone</h3>
-                            <p>6264204873</p>
-                        </div>
-                    </div>
-                                          <div class="contact-detail">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h3>Email</h3>
-                            <p>contact@shivivanastyle.com</p>
-                        </div>
-                    </div>
+                <h2 style="margin-bottom: 25px; font-size: 22px;">Our Details</h2>
+                <div class="contact-detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div><h3>Visit Us</h3><p>Shivi's Stylevana Office, Damoh,<br>Madhya Pradesh, India</p></div>
                 </div>
-                <!-- Map Placeholder -->
-                <div class="map-placeholder">
-                    <a href="https://www.google.com/maps/search/times+college+damoh/@23.8218415,79.4390416,21z?entry=ttu&g_ep=EgoyMDI1MDgwNC4wIKXMDSoASAFQAw%3D%3D"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv-Qzlvd4UDKuF3TCQlEI08pv0wmJGqzAsWw&s"></a>
+                <div class="contact-detail">
+                    <i class="fas fa-phone-alt"></i>
+                    <div><h3>Call Us</h3><p>+91 6264204873</p></div>
+                </div>
+                <div class="contact-detail">
+                    <i class="fas fa-envelope"></i>
+                    <div><h3>Email Support</h3><p>contact@shivivanastyle.com</p></div>
                 </div>
                 
+                <div class="map-placeholder">
+                   <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQv-Qzlvd4UDKuF3TCQlEI08pv0wmJGqzAsWw&s" style="width:100%; display:block;">
+                </div>
             </div>
-            
+
+            <div class="history-section">
+                <h2 class="history-title">💬 Conversation History</h2>
+                
+                <?php 
+                // History fetch logic
+                $history_query = "SELECT * FROM userfeedback WHERE gmail = '$user_email' ORDER BY fid DESC";
+                $history_res = mysqli_query($cn, $history_query);
+                
+                if($history_res && mysqli_num_rows($history_res) > 0) {
+                    while($row = mysqli_fetch_array($history_res)) {
+                ?>
+                    <div class="query-card">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+                            <div>
+                                <span style="font-size: 12px; color: #aaa;">
+                                    <?php echo date('M d, Y | h:i A', strtotime($row['submitted_at'])); ?>
+                                </span>
+                                <h3 style="font-size: 18px; margin: 5px 0; color: var(--dark-text);"><?php echo htmlspecialchars($row['subject']); ?></h3>
+                            </div>
+                            <span class="status-badge <?php echo !empty($row['admin_reply']) ? 'replied' : 'pending'; ?>">
+                                <?php echo !empty($row['admin_reply']) ? 'Replied' : 'Awaiting Reply'; ?>
+                            </span>
+                        </div>
+
+                        <div style="margin: 15px 0; padding-left: 15px; border-left: 3px solid #eee;">
+                            <p style="font-size: 14px; color: #555;"><strong>Me:</strong> <?php echo nl2br(htmlspecialchars($row['message'])); ?></p>
+                        </div>
+
+                        <?php if(!empty($row['admin_reply'])) { ?>
+                            <div class="admin-response">
+                                <strong style="color: var(--success-green); font-size: 14px;">
+                                    <i class="fas fa-user-shield"></i> Stylevana Admin Team:
+                                </strong>
+                                <p style="font-size: 14px; margin-top: 8px; color: #333; line-height: 1.6;">
+                                    <?php echo nl2br(htmlspecialchars($row['admin_reply'])); ?>
+                                </p>
+                            </div>
+                        <?php } ?>
+                    </div>
+                <?php 
+                    }
+                } else {
+                    echo "<div style='text-align:center; padding: 40px; color: #ccc;'>
+                            <i class='far fa-comments' style='font-size: 40px; margin-bottom: 10px;'></i>
+                            <p>No past conversations found. If you have any issue, feel free to message us!</p>
+                          </div>";
+                }
+                ?>
+            </div>
         </div>
-   </main>
-   
-<?php include("footer.php") ?>
-
-     <?php
-      if(isset($_POST['messagebtn']))
-         {
-      $name = $_POST['name'];
-      $gmail = $_POST['gmail'];
-      $subject = $_POST['subject'];
-      $message= $_POST['message'];
-       $feedback= $_POST['feedback'];
-
-
-      $str="insert into userfeedback (name,gmail,subject,message,feedback)values('$name','$gmail','$subject','$message','$feedback')";
-      echo $str;
-      mysqli_query($cn,$str);
-         }
-     ?>
-
-        
+    </main>
+     <br>
+    <?php include("footer.php"); ?>
 </body>
 </html>

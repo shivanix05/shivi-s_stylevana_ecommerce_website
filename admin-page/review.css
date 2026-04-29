@@ -1,0 +1,18 @@
+
+        :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        .admin-wrapper { display: flex; flex: 1; padding: 40px 50px; gap: 30px; }
+        .main-content { flex: 1; }
+        .card { background: var(--white); border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 15px; font-size: 0.75rem; color: #BBB; text-transform: uppercase; border-bottom: 2px solid var(--bg); }
+        td { padding: 15px; border-bottom: 1px solid #F9F9F9; font-size: 0.85rem; vertical-align: middle; }
+        
+        .stars { color: #FFD700; font-size: 0.9rem; }
+        .reply-box { font-size: 0.75rem; color: var(--rose); font-style: italic; margin-top: 5px; display: block; }
+        
+        .btn-delete { color: #D32F2F; text-decoration: none; font-weight: 600; font-size: 0.8rem; }
+        .btn-reply { color: #0288D1; text-decoration: none; font-weight: 600; font-size: 0.8rem; margin-right: 15px; }
+   

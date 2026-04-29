@@ -1,171 +1,112 @@
-  <?php
-$cn = mysqli_connect("localhost", "root", "123456789", "shivi-stylevana");
+<?php 
+include("function.php"); 
+session_start();
 
-  ?>
-  
-  
+// Admin protection: Check if admin is logged in
+if(!isset($_SESSION["admin"])) { 
+    header("location:adminlogin.php"); 
+    exit(); 
+} 
+
+$cn = make_connection();
+
+// Search Logic
+$search_query = "";
+if(isset($_POST['search_btn'])) {
+    $search_txt = mysqli_real_escape_string($cn, $_POST['search_txt']);
+    $search_query = " WHERE name LIKE '%$search_txt%' OR gmail LIKE '%$search_txt%' OR mobilenumber LIKE '%$search_txt%'";
+}
+
+// Fetching all users - Latest registrations on top
+$str = "SELECT * FROM userdetail $search_query ORDER BY sno DESC";
+$rs = mysqli_query($cn, $str);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shivi's Stylevana Record Admin</title>
+    <title>Customer Records | Stylevana Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="user-record.css" />
     <style>
-        :root {
-    --primary-bg: #F0E4D3;
-    --primary-text: #333;
-    --accent-color: #D9A299;
-    --secondary-accent: #DCC5B2;
-    --dark-text: #222;
-}
-
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--primary-bg);
-    color: var(--primary-text);
-    margin: 0;
-    padding: 20px;
-}
-
-.container {
-    max-width: 1200px;
-    margin: auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-h1, h2 {
-    color: var(--dark-text);
-    text-align: center;
-}
-
-h1 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-}
-
-h2 {
-    font-size: 1.8em;
-    border-bottom: 2px solid var(--secondary-accent);
-    padding-bottom: 10px;
-    margin-top: 40px;
-}
-
-
-
-/* Table Styling */
-table {
-
-    border-collapse: collapse;
-    margin-top: 20px;
-    background: #fff;
-    border-radius: 8px;
-    overflow: hidden; /* To apply border-radius to the table */
-}
-
-table th, table td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-    font-size: small;
-}
-
-table th {
-    background-color: var(--secondary-accent);
-    color: var(--dark-text);
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: medium;
-    width: 100%;
-}
-
-
-
-
-.delete , .Modify {
-    padding: 8px 12px;
-    margin-right: 8px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.Modify {
-    background-color: #f0ad4e;
-    color: white;
-}
-
-.Modify:hover {
-    background-color: #ec971f;
-}
-
-.delete {
-    background-color: #d9534f;
-    color: white;
-}
-
-.delete:hover {
-    background-color: #c9302c;
-}
-.td{
-    font-size: small;
-}
-a{
-    text-decoration: none;
-    color: #F0E4D3;
-}
+      
     </style>
 </head>
 <body>
-    <form method="post">
-    <div class="container">
-        <h1>Shivi's Stylevana Order Admin Panel</h>
-        <div class="admin-section">
-            <h2>User Record list</h2>
-            <?php 
-            $str = "select * from userdetail";
-            $rs=mysqli_query($cn,$str);
-                ?>
-            <table id="orderListTable">
-                <thead>
-                    <tr>
-                        <th>sno</th>
-                        <th>Name</th>
-                        <th>Address</th>
-                        <th>Mobile Number</th>
-                        <th>city</th>
-                        <th>pincode</th>
-                        <th>Age</th>
-                        <th>password</th>
-                        <th>confirm password</th>
-                        <th>Action</th>
-                    </tr>
-                 </thead>
-                 <?php
-                  while($row=mysqli_fetch_array($rs)){  
-                    ?>
-                    <tr>
-                        <td><?php echo $row['sno'];?></td>
-                         <td><?php echo $row['name'];?></td>
-                        <td><?php echo $row['address'];?></td>
-                        <td><?php echo $row['mobilenumber'];?></td>
-                        <td><?php echo $row['city'];?></td>
-                        <td><?php echo $row['pincode'];?></td>
-                        <td><?php echo $row['age'];?></td>
-                         <td><?php echo $row['password'];?></td>
-                       <td><?php echo $row['confirmpassword'];?></td>
-                        <td><button class="delete"><a href="delet.php?r=<?php echo $row['sno'];?>">Delet</a></button></td>
+
+    <?php include("header.php"); ?>
+
+    <div class="admin-wrapper">
+        
+        <?php include("sidebar.php"); ?>
+
+        <main class="main-content">
+            
+            <div class="page-header">
+                <h1>User Records</h1>
+                
+                <form method="POST" class="search-box">
+                    <i class="fas fa-search" style="color: #DDD; align-self: center;"></i>
+                    <input type="text" name="search_txt" placeholder="Search by name, email or mobile..." value="<?php echo isset($_POST['search_txt']) ? $_POST['search_txt'] : ''; ?>">
+                    <button type="submit" name="search_btn" class="search-btn">Find</button>
+                </form>
+            </div>
+
+            <div class="customer-card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer Profile</th>
+                            <th>Email Address</th>
+                            <th>Mobile Number</th>
+                            <th>City</th>
+                            <th>Status</th>
+                            <th style="text-align: center;">Action</th>
                         </tr>
-                    <?php 
-                    }
-                    echo"</table>";
-                  ?>
-        </div>
-</div>
-</form>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        if(mysqli_num_rows($rs) > 0) {
+                            while($row = mysqli_fetch_array($rs)) { 
+                                // Photo path handling
+                                $photo = $row['userphoto'];
+                                $image_src = (!empty($photo)) ? "uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        ?>
+                        <tr>
+                            <td>
+                                <div class="user-info-cell">
+                                    <img src="<?php echo $image_src; ?>" class="user-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                                    <div>
+                                        <span class="user-name"><?php echo $row['name']; ?></span>
+                                        <span class="user-sno">ID: #CUST-<?php echo $row['sno']; ?></span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color: #666;"><?php echo $row['gmail']; ?></td>
+                            <td style="font-weight: 500; color: #444;"><?php echo $row['mobilenumber']; ?></td>
+                            <td><?php echo (!empty($row['city'])) ? $row['city'] : '<span style="color:#DDD;">N/A</span>'; ?></td>
+                            <td><span class="status-badge">Active</span></td>
+                            <td style="text-align: center;">
+                                <a href="user-details.php?id=<?php echo $row['sno']; ?>" class="view-link">
+                                    View Full Details <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php 
+                            } 
+                        } else {
+                            echo "<tr><td colspan='6' class='empty-state'>No user records found matching your criteria.</td></tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <?php include("footer.php"); ?>
+
 </body>
 </html>

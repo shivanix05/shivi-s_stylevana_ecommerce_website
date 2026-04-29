@@ -1,0 +1,31 @@
+style>
+        :root { --bg: #F8F3ED; --rose: #D9A899; --white: #fff; --text: #444; --gray: #7A7A7A; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        body { background: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        /* Layout Wrapper */
+        .admin-wrapper { display: flex; flex: 1; padding: 40px 50px; gap: 30px; }
+
+        /* Main Content Area */
+        .main-content { flex: 1; }
+        .card { background: var(--white); border-radius: 25px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); overflow-x: auto; }
+        
+        h1 { font-family: 'Playfair Display'; font-size: 2.2rem; margin-bottom: 30px; }
+
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; padding: 15px; font-size: 0.75rem; color: #BBB; text-transform: uppercase; border-bottom: 2px solid var(--bg); letter-spacing: 1px; }
+        td { padding: 18px 15px; border-bottom: 1px solid #F9F9F9; font-size: 0.85rem; vertical-align: middle; }
+
+        /* Status Badges */
+        .status { padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; text-transform: capitalize; display: inline-block; }
+        .pending { background: #FFF3E0; color: #E65100; }
+        .processing { background: #E1F5FE; color: #0288D1; }
+        .shipped { background: #E3F2FD; color: #1565C0; }
+        .delivered { background: #E8F5E9; color: #2E7D32; }
+        .cancelled { background: #FFEBEE; color: #C62828; }
+
+        .btn-details { color: var(--rose); text-decoration: none; font-weight: 600; border: 1.5px solid var(--rose); padding: 8px 18px; border-radius: 12px; transition: 0.3s; font-size: 0.75rem; display: inline-block; }
+        .btn-details:hover { background: var(--rose); color: white; transform: translateY(-2px); }
+    

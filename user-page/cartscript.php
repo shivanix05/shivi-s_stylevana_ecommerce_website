@@ -1,29 +1,26 @@
 <script>
-    function addcart(button) {
+function addToCart(button) {
     const productCard = button.closest('.product-card');
+    
+    // Product ID nikalne ka tareeka (Check karein ki aapne class 'pid-badge' ya 'product-id' di hai)
+    const idText = productCard.querySelector('.pid-badge').textContent;
+    const pid = idText.replace('#', '').trim(); 
 
-    const name = productCard.querySelector('.productname').textContent.trim();
-    const id = productCard.querySelector('.product-id').textContent.replace('Product ID: ', '').replace('product ID: ', '');
-    const priceText = productCard.querySelector('.price').textContent.replace('Rs. ', '');
-    const price = parseFloat(priceText);
-    const image = productCard.querySelector('img').src; // Get the image source URL
+    let formData = new FormData();
+    formData.append('pid', pid);
 
-    let orders = [];
-    try {
-        orders = JSON.parse(localStorage.getItem('orders')) || [];
-    } catch (e) {
-        orders = [];
-    }
-
-    orders.push({
-        name: name,
-        id: id,
-        price: price,
-        image: image, // Add the image URL to the order object
-        date: new Date().toLocaleString()
+    fetch('manage_cart.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        if(data.trim() == "Success") {
+            alert("Item added to cart!");
+        } else {
+            console.log(data); // Error console mein dikhega
+            alert(data);
+        }
     });
-
-    localStorage.setItem('orders', JSON.stringify(orders));
-    alert(name + " added to cart!");
 }
 </script>
