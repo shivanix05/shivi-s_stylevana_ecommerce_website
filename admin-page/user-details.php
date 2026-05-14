@@ -52,7 +52,7 @@ $order_res = mysqli_query($cn, "SELECT * FROM orders WHERE user_email='$u_gmail'
         <?php include("sidebar.php"); ?>
 
         <main class="main-content">
-            <a href="user-records.php" class="back-btn"><i class="fas fa-arrow-left"></i> Back to User Records</a>
+            <a href="user-record.php" class="back-btn"><i class="fas fa-arrow-left"></i> Back to User Records</a>
 
             <div class="grid-layout">
                 <div class="card" style="text-align: center;">

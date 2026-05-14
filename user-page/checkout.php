@@ -155,7 +155,7 @@ if (isset($_POST['place_order']) && $_POST['payment_method'] == 'Online') {
                 </div>
                 <div class="form-group">
                     <label>Mobile Number</label>
-                    <input type="tel" name="mobile" value="<?php echo htmlspecialchars($user_data['mobilenumber'] ?? ''); ?>" pattern="[0-9]{10}" required>
+                    <input type="tel" name="mobile" value="<?php echo htmlspecialchars($user_data['mobilenumber'] ?? ''); ?>" pattern="\+91[0-9]{10}" required>
                 </div>
                 <div class="form-group">
                     <label>Complete Address</label>

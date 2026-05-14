@@ -25,7 +25,45 @@ if(!$order) {
     exit(); 
 }
 
-// Current status check
+// --- REVIEW LOGIC WITH PHOTO SAVE ---
+if (isset($_POST['submit_review'])) {
+    $rating = mysqli_real_escape_string($cn, $_POST['rating']);
+    $comment = mysqli_real_escape_string($cn, $_POST['comment']);
+    $pid = $order['pid']; 
+    $review_photo = ""; // Default empty
+
+    // File Upload handling
+    if(isset($_FILES['review_photo']) && $_FILES['review_photo']['error'] == 0) {
+        $target_dir = "uploads/reviews/"; 
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+        $file_ext = pathinfo($_FILES["review_photo"]["name"], PATHINFO_EXTENSION);
+        // Creating unique name: time + product_id
+        $db_path = $target_dir . time() . "_" . $pid . "." . $file_ext;
+        
+        if(move_uploaded_file($_FILES["review_photo"]["tmp_name"], $db_path)) {
+            $review_photo = $db_path; // Path to save in DB
+        }
+    }
+
+    $check_review = mysqli_query($cn, "SELECT rid FROM reviews WHERE pid = '$pid' AND user_email = '$user'");
+    
+    if (mysqli_num_rows($check_review) > 0) {
+        echo "<script>alert('You have already reviewed this product!');</script>";
+    } else {
+        // SQL query updated with rev_photo column
+        $ins_review = "INSERT INTO reviews (pid, user_email, rating, comment, rev_photo, review_date) 
+                       VALUES ('$pid', '$user', '$rating', '$comment', '$review_photo', NOW())";
+        
+        if (mysqli_query($cn, $ins_review)) {
+            echo "<script>alert('Review posted successfully!'); window.location.href='order-details.php?id=$order_id';</script>";
+        } else {
+            echo "Error: " . mysqli_error($cn);
+        }
+    }
+}
+
 $s = isset($order['status']) ? $order['status'] : 'Order Placed'; 
 ?>
 
@@ -48,27 +86,27 @@ $s = isset($order['status']) ? $order['status'] : 'Order Placed';
         
         .status-item.active .indicator { background: #D9A299; border-color: #D9A299; box-shadow: 0 0 10px rgba(217, 162, 153, 0.5); }
         .status-item.active p { color: #333; font-weight: bold; }
-        
-        .status-item.cancelled .indicator { background: #e74c3c; border-color: #e74c3c; box-shadow: 0 0 10px rgba(231, 76, 60, 0.3); }
+        .status-item.cancelled .indicator { background: #e74c3c; border-color: #e74c3c; }
         .status-item.cancelled p { color: #e74c3c; font-weight: bold; }
-        
         .status-item p { font-size: 0.75rem; margin-top: 8px; color: #888; font-weight: 600; }
 
         .summary-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
         .prod-display { display: flex; gap: 20px; background: #fdfaf9; padding: 20px; border-radius: 12px; align-items: center; border: 1px solid #f9ecea; }
-        
         .cancelled-overlay { filter: grayscale(1); opacity: 0.7; }
+        .prod-display img { width: 140px; height: 180px; object-fit: cover; border-radius: 10px; }
         
-        .prod-display img { width: 140px; height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid #eee; }
         .form-data-box { background: #fff; border: 1px dashed #D9A299; padding: 20px; border-radius: 12px; }
         .form-data-box h4 { margin-bottom: 15px; color: #D9A299; font-size: 1rem; border-bottom: 1px solid #f9ecea; padding-bottom: 5px; }
-        .form-data-box p { font-size: 0.9rem; margin-bottom: 8px; color: #555; }
-        .tracking-id-badge { display: inline-block; background: #333; color: #fff; padding: 2px 10px; border-radius: 5px; font-size: 0.8rem; margin-top: 5px; }
 
-        .cancel-badge { background: #feeaea; color: #e74c3c; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px; border: 1px solid #fabebb; }
-        
-        .pay-now-btn { display: inline-block; background: #D9A299; color: #fff; padding: 8px 20px; border-radius: 5px; text-decoration: none; font-size: 0.9rem; font-weight: 600; margin-top: 10px; transition: 0.3s; }
-        .pay-now-btn:hover { background: #c68e84; box-shadow: 0 4px 10px rgba(217, 162, 153, 0.3); }
+        /* Review Styles */
+        .review-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+        .rating-stars { display: flex; gap: 5px; flex-direction: row-reverse; justify-content: flex-end; }
+        .rating-stars input { display: none; }
+        .rating-stars label { font-size: 1.5rem; color: #ddd; cursor: pointer; }
+        .rating-stars input:checked ~ label, .rating-stars label:hover, .rating-stars label:hover ~ label { color: #f39c12; }
+        .rev-input { width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin: 10px 0; font-family: inherit; }
+        .rev-btn { background: #D9A299; color: #fff; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .review-img-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd; }
 
         @media (max-width: 768px) { .summary-grid { grid-template-columns: 1fr; } }
     </style>
@@ -79,96 +117,85 @@ $s = isset($order['status']) ? $order['status'] : 'Order Placed';
 
     <div class="order-details-container">
         <div class="details-card">
-            
             <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 10px;">Order Details</h2>
-            
-            <?php if($s == 'Cancelled'): ?>
-                <div class="cancel-badge"><i class="fas fa-times-circle"></i> This order has been cancelled</div>
-            <?php endif; ?>
 
+            <!-- Status Line -->
             <div class="status-line-container">
                 <?php if($s != 'Cancelled'): ?>
-                    <div class="status-item active">
-                        <span class="indicator"></span>
-                        <p>PLACED</p>
-                    </div>
-                    <div class="status-item <?php echo ($s=='Shipped' || $s=='Delivered')?'active':''; ?>">
-                        <span class="indicator"></span>
-                        <p>SHIPPED</p>
-                    </div>
-                    <div class="status-item <?php echo ($s=='Delivered')?'active':''; ?>">
-                        <span class="indicator"></span>
-                        <p>DELIVERED</p>
-                    </div>
+                    <div class="status-item active"><span class="indicator"></span><p>PLACED</p></div>
+                    <div class="status-item <?php echo ($s=='Shipped' || $s=='Delivered')?'active':''; ?>"><span class="indicator"></span><p>SHIPPED</p></div>
+                    <div class="status-item <?php echo ($s=='Delivered')?'active':''; ?>"><span class="indicator"></span><p>DELIVERED</p></div>
                 <?php else: ?>
-                    <div class="status-item active">
-                        <span class="indicator"></span>
-                        <p>PLACED</p>
-                    </div>
-                    <div class="status-item cancelled">
-                        <span class="indicator"></span>
-                        <p>CANCELLED</p>
-                    </div>
+                    <div class="status-item active"><span class="indicator"></span><p>PLACED</p></div>
+                    <div class="status-item cancelled"><span class="indicator"></span><p>CANCELLED</p></div>
                 <?php endif; ?>
             </div>
 
             <div class="summary-grid <?php echo ($s=='Cancelled')?'cancelled-overlay':''; ?>">
+                <!-- Product Info -->
                 <div class="prod-display">
-                    <img src="<?php echo $order['productphoto']; ?>" 
-                         onerror="this.src='admin/<?php echo $order['productphoto']; ?>';" 
-                         alt="Product Photo">
-                    
+                    <img src="<?php echo $order['productphoto']; ?>" onerror="this.src='admin/<?php echo $order['productphoto']; ?>';">
                     <div>
-                        <h3 style="margin-bottom: 10px; color: #333;">Order ID: #STV-<?php echo $order['order_id']; ?></h3>
+                        <h3 style="color: #333;">Order ID: #STV-<?php echo $order['order_id']; ?></h3>
                         <p style="color: #D9A299; font-weight: bold; font-size: 1.4rem;">₹<?php echo number_format($order['productprice']); ?></p>
-                        <p style="font-size: 0.95rem; margin-top: 10px; color: #666;">Quantity: <strong><?php echo $order['qty']; ?></strong></p>
-                        <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Order Date: <?php echo date('d M, Y', strtotime($order['order_date'])); ?></p>
-                        <p style="font-size: 0.85rem; color: #666;">Shipping: <strong><?php echo ($order['shipping_charge'] > 0) ? '₹'.$order['shipping_charge'] : 'FREE'; ?></strong></p>
+                        <p>Quantity: <strong><?php echo $order['qty']; ?></strong></p>
                     </div>
                 </div>
 
+                <!-- Delivery Info -->
                 <div class="form-data-box">
                     <h4><i class="fas fa-truck"></i> Delivery Details</h4>
                     <p><strong>Name:</strong> <?php echo htmlspecialchars($order['name']); ?></p>
                     <p><strong>Address:</strong> <?php echo htmlspecialchars($order['adddress']); ?></p>
-                    <p><strong>Mobile:</strong> <?php echo $order['mobilenumber']; ?></p>
-                    
-                    <?php if(!empty($order['tracking_id']) && $s != 'Cancelled'): ?>
-                        <p><strong>Tracking ID:</strong> <span class="tracking-id-badge"><?php echo $order['tracking_id']; ?></span></p>
-                    <?php endif; ?>
-
-                    <h4 style="margin-top: 20px;"><i class="fas fa-credit-card"></i> Payment Information</h4>
-                    <p><strong>Method:</strong> <?php echo $order['payment_method']; ?></p>
-                    <p><strong>Payment Status:</strong> 
-                        <span style="color: <?php 
-                            if($s == 'Cancelled') echo '#888';
-                            elseif(stripos($order['payment_method'], 'Online') !== false || $s == 'Delivered') echo '#27ae60'; 
-                            else echo '#f39c12'; 
-                        ?>; font-weight: bold;">
-                            <?php 
-                                if($s == 'Cancelled' && stripos($order['payment_method'], 'COD') !== false) {
-                                    echo 'Void';
-                                } else {
-                                    if(stripos($order['payment_method'], 'Online') !== false || $s == 'Delivered') {
-                                        echo 'Paid';
-                                    } else {
-                                        echo 'Unpaid';
-                                    }
-                                }
-                            ?>
-                        </span>
-                    </p>
-
-                    <?php if(stripos($order['payment_method'], 'COD') !== false && $s != 'Cancelled' && $s != 'Delivered'): ?>
-                        <a href="checkout.php?id=<?php echo $order['order_id']; ?>" class="pay-now-btn">
-                            <i class="fas fa-wallet"></i> Pay Online Now
-                        </a>
-                    <?php endif; ?>
+                    <p><strong>Payment:</strong> <?php echo $order['payment_method']; ?></p>
                 </div>
             </div>
 
+            <!-- Review Section -->
+            <div class="review-section">
+                <h4 style="color: #D9A299; margin-bottom: 15px;">Rate your experience</h4>
+                <?php
+                $p_id = $order['pid'];
+                $chk = mysqli_query($cn, "SELECT * FROM reviews WHERE pid = '$p_id' AND user_email = '$user'");
+                if(mysqli_num_rows($chk) == 0):
+                ?>
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="rating-stars">
+                        <input type="radio" name="rating" value="5" id="5" required><label for="5">★</label>
+                        <input type="radio" name="rating" value="4" id="4"><label for="4">★</label>
+                        <input type="radio" name="rating" value="3" id="3"><label for="3">★</label>
+                        <input type="radio" name="rating" value="2" id="2"><label for="2">★</label>
+                        <input type="radio" name="rating" value="1" id="1"><label for="1">★</label>
+                    </div>
+                    <textarea name="comment" class="rev-input" rows="3" placeholder="Share your feedback..." required></textarea>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-size: 0.85rem; color: #666; display: block; margin-bottom: 5px;">Upload Product Photo:</label>
+                        <input type="file" name="review_photo" accept="image/*">
+                    </div>
+
+                    <button type="submit" name="submit_review" class="rev-btn">Post Review</button>
+                </form>
+                <?php else: 
+                    $rev_data = mysqli_fetch_assoc($chk); 
+                ?>
+                    <div style="background: #fdfaf9; padding: 15px; border-radius: 10px; border: 1px solid #f9ecea;">
+                        <p style="color: #f39c12; margin-bottom: 5px;">
+                            <?php for($i=1; $i<=$rev_data['rating']; $i++) echo "★"; ?>
+                        </p>
+                        <p style="font-size: 0.9rem; color: #555;">"<?php echo htmlspecialchars($rev_data['comment']); ?>"</p>
+                        
+                        <?php if(!empty($rev_data['rev_photo'])): ?>
+                            <img src="<?php echo $rev_data['rev_photo']; ?>" class="review-img-preview">
+                        <?php endif; ?>
+                        
+                        <p style="font-size: 0.75rem; color: #888; margin-top: 10px;">Reviewed on <?php echo date('d M, Y', strtotime($rev_data['review_date'])); ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
             <div style="margin-top: 40px; text-align: center;">
-                <a href="myorder.php" style="text-decoration: none; color: #D9A299; font-weight: 600; display: inline-flex; align-items: center; gap: 8px;">
+                <a href="myorder.php" style="text-decoration: none; color: #D9A299; font-weight: 600;">
                     <i class="fas fa-chevron-left"></i> Back to My Orders
                 </a>
             </div>

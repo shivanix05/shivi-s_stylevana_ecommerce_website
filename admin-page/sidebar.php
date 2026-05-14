@@ -115,6 +115,8 @@
         <i class="fas fa-star"></i> Reviews
     </a>
 
+     <a href="admin_stats.php" class="nav-link <?php echo ($current_page == 'admin_stats.php') ? 'active' : ''; ?>"> <i class="fas fa-chart-bar"></i> Statistics </a>
+
     <a href="adminlogout.php" class="nav-link" style="margin-top: 20px; color: #e74c3c;">
         <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i> Logout
     </a>
