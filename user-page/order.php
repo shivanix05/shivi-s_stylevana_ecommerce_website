@@ -73,64 +73,9 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@300;400;500;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+            <link rel="stylesheet" href="orders.css">
+
   <style>
-    :root {
-      --bg:       #FAF7F4;
-      --card:     #FFFFFF;
-      --accent:   #D9A299;
-      --accent2:  #c48b81;
-      --dark:     #282c3f;
-      --muted:    #888;
-      --border:   #f0e8e4;
-      --green:    #27ae60;
-      --red:      #e74c3c;
-      --tag-bg:   #fce8e6;
-      --soft:     #fff7f6;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--dark); }
-
-    .page-wrap { max-width: 1100px; margin: 36px auto; padding: 0 20px 60px; }
-
-    /* Breadcrumb */
-    .breadcrumb { font-size: 12px; color: var(--muted); margin-bottom: 24px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .breadcrumb a { color: var(--muted); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--accent); }
-    .breadcrumb i { font-size: 9px; }
-
-    /* Main product card */
-    .product-main {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
-      background: var(--card); border-radius: 32px; padding: 40px;
-      box-shadow: 0 4px 32px rgba(0,0,0,.06);
-    }
-
-    /* ── GALLERY ── */
-    .gallery-col { display: flex; flex-direction: column; gap: 12px; }
-
-    .main-img-wrap {
-      width: 100%; aspect-ratio: 1/1; border-radius: 24px; overflow: hidden;
-      background: var(--soft); position: relative;
-    }
-    .main-img-wrap img {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform .5s ease; display: block;
-    }
-    .main-img-wrap:hover img { transform: scale(1.04); }
-
-    /* Badge on image */
-    .img-badge {
-      position: absolute; top: 14px; left: 14px;
-      background: var(--accent); color: white;
-      font-size: 10px; font-weight: 700;
-      padding: 4px 12px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 1px; z-index: 2;
-    }
-    .img-badge.out  { background: #888; }
-    .img-badge.low  { background: #ff9800; }
-    .img-badge.feat { background: linear-gradient(90deg,#f7971e,#ffd200); color: #333; }
-
-    /* Photo counter dot (top-right) */
     .photo-counter {
       position: absolute; top: 14px; right: 14px;
       background: rgba(0,0,0,.55); color: white;
@@ -138,149 +83,10 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
       border-radius: 20px; z-index: 2;
       display: <?php echo $photo_count > 1 ? 'block' : 'none'; ?>;
     }
-
-    /* Thumbnails row — responsive, up to 5 */
     .thumbs-row {
       display: grid;
       grid-template-columns: repeat(<?php echo min($photo_count, 5); ?>, 1fr);
       gap: 10px;
-    }
-    .thumb-wrapper { display: flex; flex-direction: column; }
-    .thumb {
-      aspect-ratio: 1/1; border-radius: 14px; overflow: hidden;
-      border: 2px solid transparent; cursor: pointer;
-      transition: border-color .2s, transform .2s;
-      background: var(--soft);
-    }
-    .thumb:hover, .thumb.active { border-color: var(--accent); transform: scale(1.03); }
-    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .thumb-label {
-      font-size: 9px; color: var(--muted); text-align: center;
-      margin-top: 4px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase;
-    }
-
-    /* No extra photos message */
-    .no-extra-photos {
-      text-align: center; padding: 12px; font-size: 11px; color: var(--muted);
-      background: var(--soft); border-radius: 12px; border: 1px dashed var(--border);
-    }
-
-    /* ── INFO COL ── */
-    .info-col { display: flex; flex-direction: column; gap: 0; }
-
-    .brand-script { font-family: 'Dancing Script', cursive; font-size: 20px; color: var(--accent); margin-bottom: 6px; }
-    .prod-title { font-family: 'Playfair Display', serif; font-size: clamp(22px,3vw,32px); font-weight: 700; line-height: 1.2; color: var(--dark); margin-bottom: 14px; }
-
-    .rating-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .stars-display { color: #f5a623; font-size: 14px; letter-spacing: 1px; }
-    .rating-num { font-size: 14px; font-weight: 700; color: var(--dark); }
-    .rating-count { font-size: 12px; color: var(--muted); }
-    .rating-divider { color: var(--border); }
-
-    .offer-ribbon {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--tag-bg); color: var(--accent2);
-      font-size: 12px; font-weight: 700; padding: 5px 14px;
-      border-radius: 20px; margin-bottom: 16px;
-      text-transform: uppercase; letter-spacing: .5px;
-    }
-
-    .price-block { margin-bottom: 18px; }
-    .price-main { font-size: 36px; font-weight: 700; color: var(--dark); line-height: 1; }
-    .price-meta { display: flex; align-items: center; gap: 10px; margin-top: 6px; }
-    .price-old { font-size: 16px; color: var(--muted); text-decoration: line-through; }
-    .disc-chip { background: #e8f5e9; color: var(--green); font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
-
-    .delivery-info {
-      display: flex; align-items: center; gap: 10px;
-      background: #f0fdf9; border: 1px solid #d1fae5;
-      border-radius: 14px; padding: 12px 16px; margin-bottom: 18px;
-      font-size: 13px; color: #03a685;
-    }
-    .delivery-info i { font-size: 16px; }
-    .delivery-info.paid { background: var(--soft); border-color: var(--border); color: var(--muted); }
-    .delivery-info.paid i { color: var(--accent); }
-
-    .stock-info { font-size: 12px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
-    .stock-info.ok  { color: var(--green); }
-    .stock-info.low { color: #ff9800; }
-    .stock-info.out { color: var(--red); }
-    .stock-dot { width: 8px; height: 8px; border-radius: 50%; }
-    .stock-dot.ok  { background: var(--green); }
-    .stock-dot.low { background: #ff9800; }
-    .stock-dot.out { background: var(--red); }
-
-    .qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-    .qty-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-    .qty-ctrl { display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .qty-btn { width: 36px; height: 36px; border: none; background: var(--soft); font-size: 16px; cursor: pointer; color: var(--dark); transition: background .15s; display: flex; align-items: center; justify-content: center; }
-    .qty-btn:hover { background: var(--tag-bg); }
-    .qty-num { width: 44px; text-align: center; font-size: 15px; font-weight: 700; border: none; outline: none; background: white; color: var(--dark); }
-
-    .btn-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-    .btn-row-full { margin-bottom: 10px; }
-    .btn { padding: 14px 20px; border-radius: 14px; border: none; font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 13px; cursor: pointer; transition: all .25s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; letter-spacing: .3px; }
-    .btn-cart  { background: var(--accent); color: white; box-shadow: 0 6px 20px rgba(217,162,153,.35); }
-    .btn-cart:hover  { background: var(--accent2); transform: translateY(-2px); }
-    .btn-wish  { background: white; color: var(--red); border: 1.5px solid #fce8e6; }
-    .btn-wish:hover  { background: #fce8e6; }
-    .btn-wish.wishlisted { background: #fce8e6; }
-    .btn-order { width: 100%; background: var(--dark); color: white; box-shadow: 0 6px 20px rgba(40,44,63,.2); }
-    .btn-order:hover { background: #1a1e2d; transform: translateY(-2px); }
-    .btn-sold  { width: 100%; background: #eee; color: #999; cursor: not-allowed; }
-    .btn-notify { width: 100%; background: white; color: var(--accent2); border: 1.5px solid var(--accent); }
-
-    .sec-divider { height: 1px; background: var(--border); margin: 20px 0; }
-    .highlights { display: flex; flex-direction: column; gap: 10px; }
-    .highlight-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--muted); }
-    .highlight-row i { color: var(--accent); margin-top: 2px; font-size: 13px; }
-
-    /* ── TABS ── */
-    .tabs-section { margin-top: 36px; }
-    .tab-nav { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 28px; }
-    .tab-btn { padding: 12px 24px; background: none; border: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 14px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .2s; }
-    .tab-btn.active { color: var(--accent2); border-bottom-color: var(--accent2); }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    .desc-text { font-size: 14px; line-height: 1.9; color: #666; background: var(--soft); border-radius: 20px; padding: 24px; }
-
-    /* Reviews */
-    .reviews-summary { display: grid; grid-template-columns: auto 1fr; gap: 32px; align-items: center; background: var(--soft); border-radius: 20px; padding: 28px; margin-bottom: 24px; }
-    .big-rating .num { font-family: 'Playfair Display', serif; font-size: 56px; font-weight: 700; color: var(--dark); line-height: 1; }
-    .big-rating .stars { color: #f5a623; font-size: 18px; margin: 6px 0; }
-    .big-rating .count { font-size: 12px; color: var(--muted); }
-    .rating-bars { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-    .rbar-row { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--muted); }
-    .rbar-row span:first-child { width: 30px; text-align: right; font-weight: 600; }
-    .rbar { flex: 1; height: 6px; background: var(--border); border-radius: 10px; overflow: hidden; }
-    .rbar-fill { height: 100%; background: linear-gradient(90deg, #f5a623, #f7c948); border-radius: 10px; transition: width .6s; }
-
-    .review-card { background: white; border: 1px solid var(--border); border-radius: 18px; padding: 20px; margin-bottom: 14px; transition: box-shadow .2s; }
-    .review-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.06); }
-    .review-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
-    .reviewer-info { display: flex; align-items: center; gap: 10px; }
-    .reviewer-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--tag-bg); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: var(--accent2); text-transform: uppercase; }
-    .reviewer-name { font-size: 13px; font-weight: 600; color: var(--dark); }
-    .review-date { font-size: 11px; color: var(--muted); margin-top: 2px; }
-    .review-stars { color: #f5a623; font-size: 12px; }
-    .review-text { font-size: 13px; color: #666; line-height: 1.7; margin-bottom: 10px; }
-    .admin-reply-box { background: var(--soft); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 10px 14px; font-size: 12px; color: var(--muted); margin-top: 10px; }
-    .admin-reply-box strong { color: var(--accent2); }
-
-    /* Toast */
-    #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--dark); color: white; padding: 12px 28px; border-radius: 50px; font-size: 13px; font-weight: 600; z-index: 9999; transition: transform .3s, opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap; }
-    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-
-    /* Swiper sections */
-    #sv-recommendations, #sv-similar { margin-top: 40px; }
-    .swiper-button-next, .swiper-button-prev { color: var(--accent) !important; background: white; width: 34px !important; height: 34px !important; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
-    .swiper-button-next:after, .swiper-button-prev:after { font-size: 13px !important; font-weight: 800; }
-
-    @media (max-width: 768px) {
-      .product-main { grid-template-columns: 1fr; gap: 28px; padding: 20px; }
-      .reviews-summary { grid-template-columns: 1fr; }
-      .btn-row { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
@@ -320,7 +126,7 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
         <!-- Photo counter (e.g. 1/3) -->
         <div class="photo-counter" id="photoCounter">1 / <?php echo $photo_count; ?></div>
 
-        <img src="<?php echo htmlspecialchars($all_photos[0]); ?>"
+        <img src="../admin-page/<?php echo htmlspecialchars($all_photos[0]); ?>"
              alt="<?php echo htmlspecialchars($product['productname']); ?>"
              id="mainImg"
              onerror="this.src='https://via.placeholder.com/500x500/faf7f4/D9A299?text=Image+Not+Found'">
@@ -335,7 +141,7 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
         <div class="thumb-wrapper">
           <div class="thumb <?php echo $ti===0?'active':''; ?>"
                onclick="switchPhoto(this, <?php echo $ti; ?>)">
-            <img src="<?php echo htmlspecialchars($photo_src); ?>"
+            <img src="../admin-page/<?php echo htmlspecialchars($photo_src); ?>"
                  alt="<?php echo htmlspecialchars($tlabel); ?>"
                  onerror="this.parentElement.style.display='none'; this.parentElement.nextElementSibling.style.display='none';">
           </div>
@@ -563,7 +369,7 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
 
 <!-- Pass all photos to JS as a JSON array -->
 <script>
-var productPhotos = <?php echo json_encode($all_photos); ?>;
+var productPhotos = <?php echo json_encode(array_map(function($p){ return '../admin-page/'.$p; }, $all_photos)); ?>;
 var photoCount    = <?php echo $photo_count; ?>;
 
 // Switch main image on thumbnail click

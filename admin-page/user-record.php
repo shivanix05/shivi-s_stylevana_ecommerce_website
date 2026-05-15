@@ -72,7 +72,7 @@ $rs = mysqli_query($cn, $str);
                             while($row = mysqli_fetch_array($rs)) { 
                                 // Photo path handling
                                 $photo = $row['userphoto'];
-                                $image_src = (!empty($photo)) ? "uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                                $image_src = (!empty($photo)) ? "../user-page/uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
                         ?>
                         <tr>
                             <td>

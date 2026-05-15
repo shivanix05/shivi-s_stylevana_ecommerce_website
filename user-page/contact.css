@@ -1,0 +1,76 @@
+  :root {
+            --primary-bg: #FDF8F5;
+            --accent-color: #D9A299;
+            --dark-text: #222;
+            --soft-pink: #fff0f3;
+            --success-green: #03a685;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background-color: var(--primary-bg); 
+            color: #333; 
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        
+        h1 { font-family: 'Playfair Display', serif; font-size: 3rem; text-align: center; margin-bottom: 10px; color: var(--dark-text); }
+        .sub-text { text-align: center; margin-bottom: 50px; color: #777; font-size: 1.1rem; }
+
+        .grid-container { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; }
+        
+        .contact-form-section, .contact-info-section, .history-section {
+            background: #fff; padding: 35px; border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 14px; color: var(--dark-text); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px 18px; border: 1px solid #eee;
+            border-radius: 15px; background: #fafafa; font-family: inherit; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none; border-color: var(--accent-color); background: #fff; box-shadow: 0 0 0 4px var(--soft-pink);
+        }
+
+        .submit-btn {
+            width: 100%; padding: 16px; background: var(--accent-color);
+            color: white; border: none; border-radius: 50px;
+            font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 8px 20px rgba(217,162,153,0.3);
+        }
+        .submit-btn:hover { transform: translateY(-3px); background: #c98e84; }
+
+        .contact-detail { display: flex; gap: 18px; margin-bottom: 30px; }
+        .contact-detail i { color: var(--accent-color); font-size: 1.4rem; margin-top: 5px; }
+        .contact-detail h3 { font-size: 17px; margin-bottom: 5px; color: var(--dark-text); }
+        .contact-detail p { font-size: 15px; color: #666; line-height: 1.5; }
+
+        .map-placeholder { border-radius: 20px; overflow: hidden; margin-top: 25px; border: 1px solid #eee; }
+
+        .history-section { margin-top: 50px; grid-column: span 2; }
+        .history-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 30px; border-bottom: 2px solid var(--soft-pink); padding-bottom: 10px; }
+        
+        .query-card { 
+            border: 1px solid #f0f0f0; background: #fdfcfb; 
+            padding: 20px; margin-bottom: 20px; border-radius: 20px;
+            transition: 0.3s;
+        }
+        .query-card:hover { border-color: var(--accent-color); }
+
+        .status-badge { font-size: 11px; padding: 5px 12px; border-radius: 50px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; }
+        .pending { background: #fff3cd; color: #856404; }
+        .replied { background: #d4edda; color: #155724; }
+
+        .admin-response { 
+            background: #f0fdf9; padding: 20px; border-radius: 15px; 
+            margin-top: 15px; border: 1px dashed var(--success-green); 
+        }
+
+        @media (max-width: 850px) { 
+            .grid-container { grid-template-columns: 1fr; }
+            .history-section { grid-column: span 1; }
+        }

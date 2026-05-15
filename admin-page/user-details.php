@@ -58,7 +58,7 @@ $order_res = mysqli_query($cn, "SELECT * FROM orders WHERE user_email='$u_gmail'
                 <div class="card" style="text-align: center;">
                     <?php 
                         $photo = $user['userphoto'];
-                        $img = (!empty($photo)) ? "uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                        $img = (!empty($photo)) ? "../user-page/uploads/".$photo : "https://cdn-icons-png.flaticon.com/512/149/149071.png";
                     ?>
                     <img src="<?php echo $img; ?>" class="user-big-photo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                     <h2 style="font-family:'Playfair Display';"><?php echo $user['name']; ?></h2>
@@ -125,7 +125,7 @@ $order_res = mysqli_query($cn, "SELECT * FROM orders WHERE user_email='$u_gmail'
                             
                             <td>
                                 <?php if($is_photo && !empty($log['old_value'])): ?>
-                                    <img src="uploads/<?php echo $log['old_value']; ?>" class="history-thumb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                                    <img src="../user-page/uploads/<?php echo $log['old_value']; ?>" class="history-thumb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                                     <small style="color:#d32f2f;">Old Photo</small>
                                 <?php else: ?>
                                     <span class="diff-old"><?php echo $log['old_value']; ?></span>
@@ -134,7 +134,7 @@ $order_res = mysqli_query($cn, "SELECT * FROM orders WHERE user_email='$u_gmail'
 
                             <td>
                                 <?php if($is_photo && !empty($log['new_value'])): ?>
-                                    <img src="uploads/<?php echo $log['new_value']; ?>" class="history-thumb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
+                                    <img src="../user-page/uploads/<?php echo $log['new_value']; ?>" class="history-thumb" onerror="this.src='https://cdn-icons-png.flaticon.com/512/149/149071.png'">
                                     <small style="color:#388e3c;">New Photo</small>
                                 <?php else: ?>
                                     <span class="diff-new"><?php echo $log['new_value']; ?></span>

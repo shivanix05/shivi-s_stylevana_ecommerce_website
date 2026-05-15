@@ -86,42 +86,9 @@ if (isset($_POST['place_order'])) {
     <title>My Orders - Shivi's Stylevana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="afterl-style.css">
+      <link rel="stylesheet" href="order.css">
     <style>
-        .order-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
-        .order-card { 
-            background: #fff; border-radius: 12px; padding: 20px; margin-bottom: 25px; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #D9A299;
-        }
-        .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px; }
-        .order-id { font-weight: bold; color: #333; }
-        .order-date { color: #888; font-size: 0.85rem; }
-        
-        .order-body { display: flex; gap: 20px; align-items: center; }
-        .order-img-box { 
-            width: 100px; height: 120px; overflow: hidden; border-radius: 10px; 
-            border: 1px solid #f0f0f0; flex-shrink: 0;
-        }
-        .order-img-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        .order-info-flex { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; width: 100%; }
-        .shipping-info h4 { margin: 0 0 10px 0; color: #D9A299; font-size: 1rem; }
-        .shipping-info p { margin: 2px 0; font-size: 0.85rem; color: #666; }
-        
-        .status-badge { 
-            background: #fdf0ee; color: #D9A299; padding: 5px 12px; border-radius: 20px; 
-            font-size: 0.75rem; font-weight: bold; border: 1px solid #D9A299;
-        }
-        .total-amt { font-size: 1.3rem; font-weight: bold; color: #333; }
-        
-        .view-btn {
-            display: inline-block; margin-top: 15px; background: #D9A299; color: white; 
-            padding: 8px 18px; border-radius: 20px; text-decoration: none; 
-            font-size: 0.8rem; font-weight: 600;
-        }
-
-        #thanksModal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 40px; border-radius: 20px; text-align: center; max-width: 400px; border: 3px solid #D9A299; animation: pop 0.3s ease; }
-        @keyframes pop { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+       
     </style>
 </head>
 <body>
@@ -162,8 +129,7 @@ if (isset($_POST['place_order'])) {
 
                     <div class="order-body">
                         <div class="order-img-box">
-                            <img src="<?php echo $row['productphoto']; ?>" 
-                                 onerror="this.src='admin/<?php echo $row['productphoto']; ?>';" alt="Product">
+                            <img src="../admin-page/<?php echo $row['productphoto']; ?>" alt="Product" onerror="this.src='https://via.placeholder.com/100x120';">
                         </div>
 
                         <div class="order-info-flex">

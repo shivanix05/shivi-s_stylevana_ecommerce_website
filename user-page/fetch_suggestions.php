@@ -12,7 +12,7 @@ if (isset($_POST['query'])) {
             // Yahan selectSuggestion function call hona zaroori hai
             echo "
             <div class='suggestion-item' onclick='selectSuggestion(\"".$row['productname']."\")'>
-                <img src='".$row['productphoto']."' style='width:30px; height:30px; object-fit:cover; border-radius:4px;'>
+                <img src='../admin-page/".$row['productphoto']."' style='width:30px; height:30px; object-fit:cover; border-radius:4px;'>
                 <span>".$row['productname']."</span>
             </div>";
         }

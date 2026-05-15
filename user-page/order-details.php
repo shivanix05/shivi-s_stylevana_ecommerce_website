@@ -75,40 +75,10 @@ $s = isset($order['status']) ? $order['status'] : 'Order Placed';
     <title>Order Summary - Stylevana</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="afterl-style.css">
+          <link rel="stylesheet" href="order.css">
+
     <style>
-        .order-details-container { max-width: 1100px; margin: 100px auto 50px auto; padding: 20px; font-family: 'Poppins', sans-serif; }
-        .details-card { background: #fff; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); padding: 30px; border: 1px solid #eee; position: relative; }
-
-        .status-line-container { display: flex; justify-content: space-between; margin-bottom: 40px; padding: 20px 0; border-bottom: 1px solid #f5f5f5; }
-        .status-item { flex: 1; text-align: center; position: relative; }
-        .status-item:not(:last-child)::after { content: ''; position: absolute; top: 10px; left: 50%; width: 100%; height: 2px; background: #eee; z-index: 1; }
-        .indicator { width: 20px; height: 20px; background: #fff; border: 2px solid #eee; border-radius: 50%; display: inline-block; position: relative; z-index: 2; }
-        
-        .status-item.active .indicator { background: #D9A299; border-color: #D9A299; box-shadow: 0 0 10px rgba(217, 162, 153, 0.5); }
-        .status-item.active p { color: #333; font-weight: bold; }
-        .status-item.cancelled .indicator { background: #e74c3c; border-color: #e74c3c; }
-        .status-item.cancelled p { color: #e74c3c; font-weight: bold; }
-        .status-item p { font-size: 0.75rem; margin-top: 8px; color: #888; font-weight: 600; }
-
-        .summary-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
-        .prod-display { display: flex; gap: 20px; background: #fdfaf9; padding: 20px; border-radius: 12px; align-items: center; border: 1px solid #f9ecea; }
-        .cancelled-overlay { filter: grayscale(1); opacity: 0.7; }
-        .prod-display img { width: 140px; height: 180px; object-fit: cover; border-radius: 10px; }
-        
-        .form-data-box { background: #fff; border: 1px dashed #D9A299; padding: 20px; border-radius: 12px; }
-        .form-data-box h4 { margin-bottom: 15px; color: #D9A299; font-size: 1rem; border-bottom: 1px solid #f9ecea; padding-bottom: 5px; }
-
-        /* Review Styles */
-        .review-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
-        .rating-stars { display: flex; gap: 5px; flex-direction: row-reverse; justify-content: flex-end; }
-        .rating-stars input { display: none; }
-        .rating-stars label { font-size: 1.5rem; color: #ddd; cursor: pointer; }
-        .rating-stars input:checked ~ label, .rating-stars label:hover, .rating-stars label:hover ~ label { color: #f39c12; }
-        .rev-input { width: 100%; border: 1px solid #eee; padding: 10px; border-radius: 8px; margin: 10px 0; font-family: inherit; }
-        .rev-btn { background: #D9A299; color: #fff; border: none; padding: 10px 25px; border-radius: 5px; cursor: pointer; font-weight: 600; }
-        .review-img-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-top: 10px; border: 1px solid #ddd; }
-
-        @media (max-width: 768px) { .summary-grid { grid-template-columns: 1fr; } }
+      
     </style>
 </head>
 <body>
