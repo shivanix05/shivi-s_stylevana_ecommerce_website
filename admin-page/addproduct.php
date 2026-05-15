@@ -29,6 +29,7 @@ if(isset($_POST["btn_save"])) {
     // ── Main image (required) ──
     $main_fn  = $_FILES["pimage"]["name"] ?? '';
     $main_tmp = $_FILES["pimage"]["tmp_name"] ?? '';
+    $main_path = '';
     $allowed  = ['jpg','jpeg','png','webp','gif'];
 
     if(empty($main_fn)) {

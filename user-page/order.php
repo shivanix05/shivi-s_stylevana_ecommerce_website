@@ -76,18 +76,7 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
             <link rel="stylesheet" href="orders.css">
 
   <style>
-    .photo-counter {
-      position: absolute; top: 14px; right: 14px;
-      background: rgba(0,0,0,.55); color: white;
-      font-size: 11px; font-weight: 700; padding: 4px 10px;
-      border-radius: 20px; z-index: 2;
-      display: <?php echo $photo_count > 1 ? 'block' : 'none'; ?>;
-    }
-    .thumbs-row {
-      display: grid;
-      grid-template-columns: repeat(<?php echo min($photo_count, 5); ?>, 1fr);
-      gap: 10px;
-    }
+    
   </style>
 </head>
 <body>
