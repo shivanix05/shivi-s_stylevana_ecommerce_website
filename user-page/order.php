@@ -76,7 +76,87 @@ $thumb_labels = ['Front', 'Side', 'Back', 'Detail', 'Lifestyle'];
             <link rel="stylesheet" href="orders.css">
 
   <style>
-    
+    /* ═══ GALLERY FIX ═══ */
+.gallery-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 480px;
+  flex-shrink: 0;
+}
+
+.main-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;      /* perfect square always */
+  border-radius: 14px;
+  overflow: hidden;
+  background: #faf7f4;
+  border: 1px solid #f0e8e0;
+}
+
+.main-img-wrap img#mainImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbs-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.thumbs-row::-webkit-scrollbar {
+  height: 4px;
+}
+.thumbs-row::-webkit-scrollbar-thumb {
+  background: #e0d0c8;
+  border-radius: 4px;
+}
+
+.thumb-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.thumb {
+  width: 68px;
+  height: 68px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb.active,
+.thumb:hover {
+  border-color: #D9A299;
+}
+
+.thumb-label {
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  font-family: 'DM Sans', sans-serif;
+}
   </style>
 </head>
 <body>

@@ -18,7 +18,7 @@ if (!isset($_SESSION["user"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skincare Essentials</title>
+    <title>Jewellery Products</title>
      <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     
@@ -28,12 +28,36 @@ if (!isset($_SESSION["user"])){
 
     <style>
         .page-title { font-size: 28px; font-weight: bold; color: #333; text-align: center; margin: 20px 0 25px; }
-        .action-buttons { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-cart, .btn-buy { flex: 1; padding: 10px; border: none; border-radius: 4px; font-size: 14px; font-weight: bold; cursor: pointer; text-align: center; text-decoration: none; display: inline-block; }
-        .btn-cart { background-color: #ff9f00; color: #fff; }
-        .btn-buy { background-color: #fb641b; color: #fff; }
+        
+        /* Buttons Layout */
+        .action-buttons { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 15px; 
+        }
+        .btn-cart, .btn-buy { 
+            flex: 1; 
+            padding: 10px; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-cart { 
+            background-color: #ff9f00; 
+            color: #fff; 
+        }
+        .btn-buy { 
+            background-color: #fb641b; 
+            color: #fff; 
+        }
         .btn-cart:hover { background-color: #f39700; }
         .btn-buy:hover { background-color: #e85d18; }
+        
         .image-container a { display: block; }
         .product-image { cursor: pointer; transition: transform 0.2s; }
         .product-image:hover { transform: scale(1.02); }
@@ -43,18 +67,20 @@ if (!isset($_SESSION["user"])){
     <?php include("header.php")?>
     <main>
     <div class="page-container">
-        <h1 class="page-title">Top Skincare Picks for You!</h1>
+        <h1 class="page-title">Top Jewellery Picks for You!</h1>
 
         <div class="product-grid">
              <?php 
-                $str = "select * from shop where category='skincare'" ;
+                $str = "select * from shop where category='jewellery'" ;
                 $result = mysqli_query($cn,$str);
                 while ( $row = mysqli_fetch_array($result))
                 {
-                    $product_id = $row['pid']; // Sahi column pid lagaya hai
+                    // Yahan $row['id'] ki jagah ab perfectly $row['pid'] use ho rha hai
+                    $product_id = $row['pid']; 
             ?>
            
             <div class="product-card">
+                <!-- Photo pe click karne se order.php par product pid ke saath jayega -->
                 <div class="image-container">
                     <a href="order.php?id=<?php echo $product_id; ?>">
                         <img src="../admin-page/<?php echo $row['productphoto']; ?>" alt="<?php echo $row['productname']; ?>" width="100" class="product-image" >
@@ -63,21 +89,23 @@ if (!isset($_SESSION["user"])){
                 </div>
                 
                 <div class="product-details">
-                    <span class="brand-name">Glow Care</span>
+                    <span class="brand-name">Tanishq</span>
                     <h3 class="product-name"><?php echo $row['productname'] ; ?></h3>
                     <div class="price-section">
                         <span class="current-price">₹<?php echo $row['productprice'];?></span>
-                        <span class="original-price">₹999</span>
-                        <span class="discount-percentage">40% off</span>
+                        <span class="original-price">₹1,999</span>
+                        <span class="discount-percentage">55% off</span>
                     </div>
                     <p class="delivery-info">Free Delivery</p>
                     <div class="rating-section">
-                        <span class="star-icon">★ 4.6</span>
-                        <span class="review-count">980 Reviews</span>
+                        <span class="star-icon">★ 4.2</span>
+                        <span class="review-count">2,104 Reviews</span>
                         <span class="mall-tag">Mall</span>
                     </div>
                     
+                    <!-- Action Buttons Area -->
                     <div class="action-buttons">
+                        <!-- Add to Cart Form -->
                         <form action="cart.php" method="POST" style="flex: 1; display: inline;">
                             <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
                             <input type="hidden" name="product_name" value="<?php echo $row['productname']; ?>">
@@ -88,10 +116,12 @@ if (!isset($_SESSION["user"])){
                             </button>
                         </form>
                         
+                        <!-- Buy Now Button (Direct Order page Link) -->
                         <a href="order.php?id=<?php echo $product_id; ?>" class="btn-buy">
                             <i class="fas fa-bolt"></i> Buy Now
                         </a>
                     </div>
+
                 </div>
             </div>
           <?php } ?>

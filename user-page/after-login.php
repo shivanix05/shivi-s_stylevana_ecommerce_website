@@ -56,23 +56,23 @@ function getCatMeta($cat) {
     $map = [
         'jewellery' => ['label'=>'Jewellery',  'icon'=>'💎', 'tagline'=>'Jewellery is forever; love is a treasure.',
                         'img'=>'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqeEhTWhCyXWBsN8P6mMNrTlS7NOkCgB8M7w&s',
-                        'color'=>'#f5e6fa'],
+                        'color'=>'#f5e6fa',  'page'=>'jewellery.php'],
         'makeup'    => ['label'=>'Makeup',     'icon'=>'💄', 'tagline'=>'Why waste money? Spend it on Makeup.',
                         'img'=>'https://cdn.britannica.com/35/222035-050-C68AD682/makeup-cosmetics.jpg',
-                        'color'=>'#fde8e8'],
+                        'color'=>'#fde8e8',  'page'=>'makeup.php'],
         'skincare'  => ['label'=>'Skincare',   'icon'=>'✨', 'tagline'=>'The best self-care is Skincare!',
                         'img'=>'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcTijPt6vdS-qeUguYMJSvSeaWdPVlYtve4w&s',
-                        'color'=>'#e8f5e9'],
+                        'color'=>'#e8f5e9',  'page'=>'skincare.php'],
         'clothes'   => ['label'=>'Fashion',    'icon'=>'👗', 'tagline'=>'Clothes describe your personality!',
                         'img'=>'https://www.shutterstock.com/image-photo/fashionable-clothes-boutique-store-london-600nw-589577570.jpg',
-                        'color'=>'#fff3e0'],
+                        'color'=>'#fff3e0',  'page'=>'clothes.php'],
         'clothing'  => ['label'=>'Fashion',    'icon'=>'👗', 'tagline'=>'Clothes describe your personality!',
                         'img'=>'https://www.shutterstock.com/image-photo/fashionable-clothes-boutique-store-london-600nw-589577570.jpg',
-                        'color'=>'#fff3e0'],
+                        'color'=>'#fff3e0',  'page'=>'clothes.php'],
     ];
     $key = strtolower(trim($cat));
     return $map[$key] ?? ['label'=>ucfirst($cat), 'icon'=>'🛍️', 'tagline'=>'Explore our collection!',
-                          'img'=>'', 'color'=>'#f8f5f2'];
+                          'img'=>'', 'color'=>'#f8f5f2', 'page'=>'after-login.php?category='.urlencode($cat)];
 }
 
 // ══ Wishlist check helper ══
@@ -352,7 +352,7 @@ function isWishlisted($cn, $pid, $email) {
     /* ── Main Content Area ── */
     .shop-main { flex: 1; min-width: 0; }
 
-    /* ── Toolbar (result count + active filters) ── */
+    /* ── Toolbar ── */
     .shop-toolbar {
       display: flex;
       align-items: center;
@@ -368,65 +368,47 @@ function isWishlisted($cn, $pid, $email) {
     }
     .result-count strong { color: #D9A299; font-size: 1rem; }
 
-    .active-filter-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .active-filter-pills { display: flex; flex-wrap: wrap; gap: 6px; }
     .active-filter-pill {
       background: #fdf0ee;
       border: 1px solid #f0dbd7;
       color: #c47a6e;
       font-size: 0.78rem;
-      padding: 4px 10px 4px 10px;
+      padding: 4px 10px;
       border-radius: 20px;
       font-family: 'DM Sans', sans-serif;
       display: flex;
       align-items: center;
       gap: 5px;
     }
-    .active-filter-pill .remove-pill {
-      cursor: pointer;
-      font-size: 0.9rem;
-      opacity: 0.7;
-      transition: opacity 0.15s;
-    }
+    .active-filter-pill .remove-pill { cursor: pointer; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.15s; }
     .active-filter-pill .remove-pill:hover { opacity: 1; }
 
-    /* ── View Toggle (grid/list) ── */
+    /* ── View Toggle ── */
     .view-toggle { display: flex; gap: 6px; }
     .view-btn {
-      width: 34px;
-      height: 34px;
+      width: 34px; height: 34px;
       border: 1.5px solid #e8ddd8;
       background: #fff;
       border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #aaa;
-      transition: all 0.2s;
-      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #aaa;
+      transition: all 0.2s; font-size: 0.85rem;
     }
     .view-btn.active { border-color: #D9A299; color: #D9A299; background: #fdf0ee; }
 
-    /* ── Loading overlay on grid ── */
+    /* ── Loading overlay ── */
     .grid-loading-overlay {
       display: none;
-      position: absolute;
-      inset: 0;
+      position: absolute; inset: 0;
       background: rgba(255,255,255,0.75);
-      border-radius: 12px;
-      z-index: 10;
-      align-items: center;
-      justify-content: center;
+      border-radius: 12px; z-index: 10;
+      align-items: center; justify-content: center;
     }
     .grid-loading-overlay.show { display: flex; }
     .grid-wrap { position: relative; }
     .loading-spinner {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border: 3px solid #f0dbd7;
       border-top-color: #D9A299;
       border-radius: 50%;
@@ -437,8 +419,7 @@ function isWishlisted($cn, $pid, $email) {
     /* ── Mobile filter button ── */
     .mobile-filter-btn {
       display: none;
-      align-items: center;
-      gap: 8px;
+      align-items: center; gap: 8px;
       background: #fff;
       border: 1.5px solid #e8ddd8;
       color: #555;
@@ -446,31 +427,23 @@ function isWishlisted($cn, $pid, $email) {
       border-radius: 10px;
       font-family: 'DM Sans', sans-serif;
       font-size: 0.88rem;
-      cursor: pointer;
-      transition: all 0.2s;
+      cursor: pointer; transition: all 0.2s;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
     .mobile-filter-btn:hover { border-color: #D9A299; color: #D9A299; }
 
-    /* Mobile sidebar drawer */
     .filter-overlay {
       display: none;
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(0,0,0,0.4);
       z-index: 1000;
       backdrop-filter: blur(2px);
     }
     .filter-overlay.show { display: block; }
     .filter-drawer {
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 300px;
-      background: #fff;
-      z-index: 1001;
-      padding: 24px 20px;
+      position: fixed; left: 0; top: 0; bottom: 0;
+      width: 300px; background: #fff;
+      z-index: 1001; padding: 24px 20px;
       overflow-y: auto;
       transform: translateX(-100%);
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -478,25 +451,16 @@ function isWishlisted($cn, $pid, $email) {
     }
     .filter-drawer.open { transform: translateX(0); }
     .drawer-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: none;
-      border: none;
-      font-size: 1.4rem;
-      cursor: pointer;
-      color: #999;
-      line-height: 1;
-      padding: 4px;
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none;
+      font-size: 1.4rem; cursor: pointer;
+      color: #999; line-height: 1; padding: 4px;
       transition: color 0.15s;
     }
     .drawer-close:hover { color: #D9A299; }
 
     /* ── No results ── */
-    .no-results {
-      text-align: center;
-      padding: 60px 20px;
-    }
+    .no-results { text-align: center; padding: 60px 20px; }
     .no-results .emoji { font-size: 3.5rem; margin-bottom: 16px; }
     .no-results h3 { font-family: 'Playfair Display', serif; color: #444; margin-bottom: 8px; }
     .no-results p { color: #999; font-family: 'DM Sans', sans-serif; }
@@ -507,6 +471,11 @@ function isWishlisted($cn, $pid, $email) {
       .shop-layout { flex-direction: column; padding: 0 14px 40px; }
       .mobile-filter-btn { display: flex; }
       .shop-toolbar { margin-top: 10px; }
+    }
+
+    /* ── Story item clickable ── */
+    .story-item {
+      cursor: pointer;
     }
   </style>
 </head>
@@ -526,20 +495,20 @@ function isWishlisted($cn, $pid, $email) {
   <div class="hero-text">
     <div class="eyebrow">✦ New Season, New You</div>
     <h1>Your Style,<br>Your <span>Story</span></h1>
-    <p>Discover curated fashion, skincare, makeup & jewellery — all in one beautiful place.</p>
+    <p>Discover curated fashion, skincare, makeup &amp; jewellery — all in one beautiful place.</p>
     <a href="#main-products" class="hero-cta">Shop Now <i class="fas fa-arrow-right"></i></a>
   </div>
   <div class="hero-floats">
     <div class="hero-float-card">
-      <div class="num"><?= $total_products ?>+</div>
+      <div class="num"><?php echo $total_products; ?>+</div>
       <div class="lbl">Products</div>
     </div>
     <div class="hero-float-card">
-      <div class="num"><?= count($db_categories) ?></div>
+      <div class="num"><?php echo count($db_categories); ?></div>
       <div class="lbl">Categories</div>
     </div>
     <div class="hero-float-card">
-      <div class="num"><?= $featured_count ?></div>
+      <div class="num"><?php echo $featured_count; ?></div>
       <div class="lbl">Featured</div>
     </div>
   </div>
@@ -551,16 +520,27 @@ function isWishlisted($cn, $pid, $email) {
 <div class="story-section">
   <h2>Shop by <span>Category</span></h2>
   <div class="stories-row">
-    <div class="story-item active-story" onclick="setActiveStory(this); loadFiltered();" data-cat="">
+
+    <!-- ALL — wapas after-login.php pe jaata hai -->
+    <div class="story-item active-story" 
+         onclick="window.location.href='viewall.php'" 
+         data-cat="">
       <div class="story-ring"><div class="story-icon">🛍️</div></div>
       <span>All</span>
     </div>
-    <?php foreach ($db_categories as $cat): $m = getCatMeta($cat); ?>
-    <div class="story-item" onclick="setActiveStory(this); applyQuickCategory('<?= htmlspecialchars($cat) ?>');" data-cat="<?= htmlspecialchars($cat) ?>">
-      <div class="story-ring"><div class="story-icon"><?= $m['icon'] ?></div></div>
-      <span><?= $m['label'] ?></span>
+
+    <?php foreach ($db_categories as $cat): 
+      $m = getCatMeta($cat); 
+    ?>
+    <!-- Har category apne dedicated page pe jaata hai -->
+    <div class="story-item" 
+         onclick="window.location.href='<?php echo htmlspecialchars($m['page']); ?>'" 
+         data-cat="<?php echo htmlspecialchars($cat); ?>">
+      <div class="story-ring"><div class="story-icon"><?php echo $m['icon']; ?></div></div>
+      <span><?php echo $m['label']; ?></span>
     </div>
     <?php endforeach; ?>
+
   </div>
 </div>
 <?php endif; ?>
@@ -574,7 +554,7 @@ function isWishlisted($cn, $pid, $email) {
   <div style="max-width:1400px;margin:0 auto;padding:0 20px;">
     <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;">
       <button class="mobile-filter-btn" onclick="openFilterDrawer()">
-        <i class="fas fa-sliders-h"></i> Filters & Sort
+        <i class="fas fa-sliders-h"></i> Filters &amp; Sort
         <span id="filter-badge" style="display:none;background:#D9A299;color:#fff;border-radius:50%;width:18px;height:18px;font-size:0.7rem;display:inline-flex;align-items:center;justify-content:center;margin-left:2px;">0</span>
       </button>
     </div>
@@ -584,7 +564,7 @@ function isWishlisted($cn, $pid, $email) {
 
     <!-- ══ FILTER SIDEBAR ══ -->
     <aside class="filter-sidebar" id="filterSidebar">
-      <?php include_once 'filter_panel.php'; // will echo inline if file missing ?>
+      <?php include_once 'filter_panel.php'; ?>
       <?php echo renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $categoryFilter); ?>
     </aside>
 
@@ -605,14 +585,13 @@ function isWishlisted($cn, $pid, $email) {
         </div>
       </div>
 
-      <!-- Product grid (AJAX target) -->
+      <!-- Product grid -->
       <div class="grid-wrap">
         <div class="grid-loading-overlay" id="gridLoader">
           <div class="loading-spinner"></div>
         </div>
         <div class="product-grid" id="product-grid">
           <?php
-          // ══ Initial render ══
           if ($searchQuery != "") {
               $sq = '%' . $searchQuery . '%';
               $init_res = mysqli_query($cn, "SELECT * FROM shop WHERE productname LIKE '$sq' OR brand_name LIKE '$sq' OR category LIKE '$sq'");
@@ -737,7 +716,7 @@ function renderCard($cn, $row, $current_user_email) {
     echo '</div>';
 }
 
-// ══ FILTER PANEL RENDERER (reused in sidebar + drawer) ══
+// ══ FILTER PANEL RENDERER ══
 function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $categoryFilter) {
     ob_start();
     ?>
@@ -763,7 +742,7 @@ function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $
       </div>
     </div>
 
-    <!-- Category (only on homepage, not on single category view) -->
+    <!-- Category -->
     <?php if (!$categoryFilter): ?>
     <div class="filter-section">
       <div class="filter-section-title" onclick="toggleSection(this)">
@@ -773,8 +752,8 @@ function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $
         <div class="filter-checkbox-list">
           <?php foreach ($db_categories as $cat): $m = getCatMeta($cat); ?>
           <label class="filter-checkbox-item">
-            <input type="checkbox" class="filter-cat" name="cat_filter" value="<?= htmlspecialchars($cat) ?>" onchange="loadFiltered()">
-            <?= $m['icon'] ?> <?= $m['label'] ?>
+            <input type="checkbox" class="filter-cat" name="cat_filter" value="<?php echo htmlspecialchars($cat); ?>" onchange="loadFiltered()">
+            <?php echo $m['icon']; ?> <?php echo $m['label']; ?>
           </label>
           <?php endforeach; ?>
         </div>
@@ -791,15 +770,15 @@ function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $
         <div class="price-range-wrap">
           <div class="price-range-inputs">
             <input type="number" id="price-min" placeholder="₹ Min" 
-                   value="<?= $min_price ?>" min="<?= $min_price ?>" max="<?= $max_price ?>"
+                   value="<?php echo $min_price; ?>" min="<?php echo $min_price; ?>" max="<?php echo $max_price; ?>"
                    onchange="syncSlider(); loadFiltered()">
             <input type="number" id="price-max" placeholder="₹ Max" 
-                   value="<?= $max_price ?>" min="<?= $min_price ?>" max="<?= $max_price ?>"
+                   value="<?php echo $max_price; ?>" min="<?php echo $min_price; ?>" max="<?php echo $max_price; ?>"
                    onchange="syncSlider(); loadFiltered()">
           </div>
           <input type="range" class="price-range-slider" id="price-slider"
-                 min="<?= $min_price ?>" max="<?= $max_price ?>" 
-                 value="<?= $max_price ?>" 
+                 min="<?php echo $min_price; ?>" max="<?php echo $max_price; ?>" 
+                 value="<?php echo $max_price; ?>" 
                  oninput="document.getElementById('price-max').value=this.value; loadFiltered();">
         </div>
       </div>
@@ -842,8 +821,8 @@ function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $
           <?php foreach ($db_brands as $brand): ?>
           <label class="filter-checkbox-item">
             <input type="checkbox" class="filter-brand" name="brand_filter" 
-                   value="<?= htmlspecialchars($brand) ?>" onchange="loadFiltered()">
-            <?= htmlspecialchars($brand) ?>
+                   value="<?php echo htmlspecialchars($brand); ?>" onchange="loadFiltered()">
+            <?php echo htmlspecialchars($brand); ?>
           </label>
           <?php endforeach; ?>
         </div>
@@ -893,15 +872,14 @@ function renderFilterPanel($db_brands, $min_price, $max_price, $db_categories, $
 
 <script>
 // ══════════════════════════════════════════════════════
-//  FILTER + SORT ENGINE — AJAX-based, no page reload
+//  FILTER + SORT ENGINE
 // ══════════════════════════════════════════════════════
 
 var filterTimeout = null;
 var currentView = 'grid';
-var initialCategory = '<?= htmlspecialchars($categoryFilter) ?>';
-var initialSearch   = '<?= htmlspecialchars($searchQuery) ?>';
+var initialCategory = '<?php echo htmlspecialchars($categoryFilter); ?>';
+var initialSearch   = '<?php echo htmlspecialchars($searchQuery); ?>';
 
-// Debounce to avoid rapid-fire requests
 function loadFiltered(delay) {
     delay = delay || 300;
     clearTimeout(filterTimeout);
@@ -911,10 +889,7 @@ function loadFiltered(delay) {
 function _doFilter() {
     var params = collectFilterParams();
     var qs = buildQueryString(params);
-
-    // Show loading
     document.getElementById('gridLoader').classList.add('show');
-
     fetch('filter_products.php?' + qs)
         .then(function(r) {
             if (!r.ok) throw new Error('Filter request failed');
@@ -936,35 +911,28 @@ function _doFilter() {
 
 function collectFilterParams() {
     var p = {};
-
-    // Sort
     var sortEl = document.getElementById('sort-select');
     if (sortEl) p.sort = sortEl.value;
 
-    // Category (checkboxes)
     var catChecks = document.querySelectorAll('.filter-cat:checked');
     var cats = [];
     catChecks.forEach(function(c) { cats.push(c.value); });
     if (cats.length > 0) p.categories = cats.join(',');
     else if (initialCategory) p.categories = initialCategory;
 
-    // Price
     var pMin = document.getElementById('price-min');
     var pMax = document.getElementById('price-max');
     if (pMin) p.price_min = pMin.value;
     if (pMax) p.price_max = pMax.value;
 
-    // Rating
     var ratingEl = document.querySelector('input[name="rating_filter"]:checked');
     if (ratingEl && ratingEl.value) p.rating = ratingEl.value;
 
-    // Brands
     var brandChecks = document.querySelectorAll('.filter-brand:checked');
     var brands = [];
     brandChecks.forEach(function(b) { brands.push(b.value); });
     if (brands.length > 0) p.brands = brands.join('||');
 
-    // Toggles
     var instockEl = document.getElementById('instock-toggle');
     if (instockEl && instockEl.checked) p.instock = '1';
     var featEl = document.getElementById('featured-toggle');
@@ -972,9 +940,7 @@ function collectFilterParams() {
     var saleEl = document.getElementById('sale-toggle');
     if (saleEl && saleEl.checked) p.sale = '1';
 
-    // Search
     if (initialSearch) p.search = initialSearch;
-
     return p;
 }
 
@@ -994,13 +960,9 @@ function updateActivePills(params) {
     var container = document.getElementById('active-pills');
     if (!container) return;
     container.innerHTML = '';
-
     var pills = [];
     if (params.sort && params.sort !== 'default') {
-        var sortLabels = {
-            price_asc: 'Price ↑', price_desc: 'Price ↓',
-            newest: 'Newest', rating: 'Top Rated', discount: 'Sale'
-        };
+        var sortLabels = { price_asc: 'Price ↑', price_desc: 'Price ↓', newest: 'Newest', rating: 'Top Rated', discount: 'Sale' };
         pills.push({ label: sortLabels[params.sort] || params.sort, key: 'sort' });
     }
     if (params.rating) pills.push({ label: params.rating + '+ Stars', key: 'rating' });
@@ -1008,11 +970,8 @@ function updateActivePills(params) {
     if (params.featured) pills.push({ label: 'Featured', key: 'featured' });
     if (params.sale) pills.push({ label: 'On Sale', key: 'sale' });
     if (params.brands) {
-        params.brands.split('||').forEach(function(b) {
-            pills.push({ label: b, key: 'brand_' + b });
-        });
+        params.brands.split('||').forEach(function(b) { pills.push({ label: b, key: 'brand_' + b }); });
     }
-
     pills.forEach(function(pill) {
         var el = document.createElement('div');
         el.className = 'active-filter-pill';
@@ -1030,90 +989,43 @@ function updateFilterBadge(params) {
     if (params.sale) count++;
     if (params.categories && !initialCategory) count++;
     if (params.brands) count += params.brands.split('||').length;
-
     var badge = document.getElementById('filter-badge');
     if (badge) {
-        if (count > 0) {
-            badge.style.display = 'inline-flex';
-            badge.textContent = count;
-        } else {
-            badge.style.display = 'none';
-        }
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
+        badge.textContent = count;
     }
 }
 
 function removePill(key) {
-    if (key === 'sort') {
-        var s = document.getElementById('sort-select');
-        if (s) s.value = 'default';
-    } else if (key === 'rating') {
-        var r = document.querySelector('input[name="rating_filter"][value=""]');
-        if (r) r.checked = true;
-    } else if (key === 'instock') {
-        var el = document.getElementById('instock-toggle');
-        if (el) el.checked = false;
-    } else if (key === 'featured') {
-        var el = document.getElementById('featured-toggle');
-        if (el) el.checked = false;
-    } else if (key === 'sale') {
-        var el = document.getElementById('sale-toggle');
-        if (el) el.checked = false;
-    } else if (key.startsWith('brand_')) {
+    if (key === 'sort') { var s = document.getElementById('sort-select'); if (s) s.value = 'default'; }
+    else if (key === 'rating') { var r = document.querySelector('input[name="rating_filter"][value=""]'); if (r) r.checked = true; }
+    else if (key === 'instock') { var el = document.getElementById('instock-toggle'); if (el) el.checked = false; }
+    else if (key === 'featured') { var el = document.getElementById('featured-toggle'); if (el) el.checked = false; }
+    else if (key === 'sale') { var el = document.getElementById('sale-toggle'); if (el) el.checked = false; }
+    else if (key.startsWith('brand_')) {
         var bname = key.replace('brand_', '');
-        document.querySelectorAll('.filter-brand').forEach(function(cb) {
-            if (cb.value === bname) cb.checked = false;
-        });
+        document.querySelectorAll('.filter-brand').forEach(function(cb) { if (cb.value === bname) cb.checked = false; });
     }
     loadFiltered(0);
 }
 
 function clearAllFilters() {
-    // Sort
-    var s = document.getElementById('sort-select');
-    if (s) s.value = 'default';
-
-    // Categories
+    var s = document.getElementById('sort-select'); if (s) s.value = 'default';
     document.querySelectorAll('.filter-cat').forEach(function(c) { c.checked = false; });
-
-    // Price reset
     var pMin = document.getElementById('price-min');
     var pMax = document.getElementById('price-max');
     var slider = document.getElementById('price-slider');
     if (pMin) pMin.value = pMin.min;
     if (pMax) pMax.value = pMax.max;
     if (slider) slider.value = slider.max;
-
-    // Rating
-    var r = document.querySelector('input[name="rating_filter"][value=""]');
-    if (r) r.checked = true;
-
-    // Brands
+    var r = document.querySelector('input[name="rating_filter"][value=""]'); if (r) r.checked = true;
     document.querySelectorAll('.filter-brand').forEach(function(b) { b.checked = false; });
-
-    // Toggles
-    ['instock-toggle', 'featured-toggle', 'sale-toggle'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el) el.checked = false;
-    });
-
-    loadFiltered(0);
-}
-
-// Category story quick-select
-function applyQuickCategory(cat) {
-    // Uncheck all category checkboxes
-    document.querySelectorAll('.filter-cat').forEach(function(c) {
-        c.checked = (c.value === cat);
+    ['instock-toggle','featured-toggle','sale-toggle'].forEach(function(id) {
+        var el = document.getElementById(id); if (el) el.checked = false;
     });
     loadFiltered(0);
 }
 
-function setActiveStory(el) {
-    document.querySelectorAll('.story-item').forEach(function(s) { s.classList.remove('active-story'); });
-    el.classList.add('active-story');
-}
-
-// Price slider sync
 function syncSlider() {
     var slider = document.getElementById('price-slider');
     var pMax = document.getElementById('price-max');
@@ -1124,44 +1036,26 @@ function syncSlider() {
     }
 }
 
-// Collapsible filter sections
 function toggleSection(titleEl) {
     var body = titleEl.nextElementSibling;
-    var icon = titleEl.querySelector('i');
     var isOpen = !body.classList.contains('collapsed');
     body.classList.toggle('collapsed', isOpen);
     titleEl.classList.toggle('collapsed', isOpen);
-    if (!isOpen) {
-        body.style.maxHeight = body.scrollHeight + 'px';
-    } else {
-        body.style.maxHeight = '0';
-    }
+    body.style.maxHeight = isOpen ? '0' : body.scrollHeight + 'px';
 }
 
-// View toggle (grid / list)
 function setView(v) {
     currentView = v;
-    var gridBtn = document.getElementById('btn-grid');
-    var listBtn = document.getElementById('btn-list');
-    var grid    = document.getElementById('product-grid');
-    if (!grid) return;
-
-    if (v === 'grid') {
-        gridBtn.classList.add('active');
-        listBtn.classList.remove('active');
-        grid.classList.remove('list-view');
-    } else {
-        gridBtn.classList.remove('active');
-        listBtn.classList.add('active');
-        grid.classList.add('list-view');
-    }
+    document.getElementById('btn-grid').classList.toggle('active', v === 'grid');
+    document.getElementById('btn-list').classList.toggle('active', v === 'list');
+    var grid = document.getElementById('product-grid');
+    if (grid) grid.classList.toggle('list-view', v === 'list');
 }
 function applyListView() {
     var grid = document.getElementById('product-grid');
     if (grid && currentView === 'list') grid.classList.add('list-view');
 }
 
-// Mobile drawer
 function openFilterDrawer() {
     document.getElementById('filterDrawer').classList.add('open');
     document.getElementById('filterOverlay').classList.add('show');
@@ -1173,11 +1067,9 @@ function closeFilterDrawer() {
     document.body.style.overflow = '';
 }
 
-// Init on page load
 window.addEventListener('DOMContentLoaded', function() {
     updateResultCount();
     syncSlider();
-    // Set initial category checkbox
     if (initialCategory) {
         document.querySelectorAll('.filter-cat').forEach(function(c) {
             if (c.value === initialCategory) c.checked = true;
@@ -1185,59 +1077,33 @@ window.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ══════════════════════════════════════════════════
-// WISHLIST TOGGLE
-// ══════════════════════════════════════════════════
+// ══ Wishlist ══
 function toggleWish(pid) {
     var btn = document.querySelector('.wish-btn[data-pid="' + String(pid) + '"]');
     if (!btn) return;
     var icon = btn.querySelector('i');
     if (!icon) return;
-    var isCurrentlyWishlisted = btn.classList.contains('wishlisted');
-
-    if (isCurrentlyWishlisted) {
-        btn.classList.remove('wishlisted');
-        icon.className = 'far fa-heart';
-        btn.title = 'Add to Wishlist';
-    } else {
-        btn.classList.add('wishlisted');
-        icon.className = 'fas fa-heart';
-        btn.title = 'Remove from Wishlist';
-        icon.style.transform = 'scale(1.5)';
-        setTimeout(function(){ icon.style.transform = 'scale(1)'; }, 300);
-    }
-
+    var isW = btn.classList.contains('wishlisted');
+    btn.classList.toggle('wishlisted', !isW);
+    icon.className = isW ? 'far fa-heart' : 'fas fa-heart';
+    btn.title = isW ? 'Add to Wishlist' : 'Remove from Wishlist';
+    if (!isW) { icon.style.transform = 'scale(1.5)'; setTimeout(function(){ icon.style.transform = 'scale(1)'; }, 300); }
     fetch('wishlist_toggle.php?pid=' + encodeURIComponent(pid))
-        .then(function(res) {
-            if (!res.ok) throw new Error('Server error: ' + res.status);
-            return res.json();
-        })
+        .then(function(res) { if (!res.ok) throw new Error('err'); return res.json(); })
         .then(function(d) {
-            if (d.wishlisted) {
-                btn.classList.add('wishlisted');
-                icon.className = 'fas fa-heart';
-                btn.title = 'Remove from Wishlist';
-                showToast('💖 Added to Wishlist!');
-            } else {
-                btn.classList.remove('wishlisted');
-                icon.className = 'far fa-heart';
-                btn.title = 'Add to Wishlist';
-                showToast('🤍 Removed from Wishlist');
-            }
+            btn.classList.toggle('wishlisted', d.wishlisted);
+            icon.className = d.wishlisted ? 'fas fa-heart' : 'far fa-heart';
+            btn.title = d.wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist';
+            showToast(d.wishlisted ? '💖 Added to Wishlist!' : '🤍 Removed from Wishlist');
         })
-        .catch(function(err) {
-            if (isCurrentlyWishlisted) {
-                btn.classList.add('wishlisted');
-                icon.className = 'fas fa-heart';
-            } else {
-                btn.classList.remove('wishlisted');
-                icon.className = 'far fa-heart';
-            }
+        .catch(function() {
+            btn.classList.toggle('wishlisted', isW);
+            icon.className = isW ? 'fas fa-heart' : 'far fa-heart';
             showToast('❌ Kuch error aaya, dobara try karo');
         });
 }
 
-// ══ Add to Cart ══
+// ══ Cart ══
 function addToCartByAjax(pid) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", "addcart.php?pid=" + pid, true);
