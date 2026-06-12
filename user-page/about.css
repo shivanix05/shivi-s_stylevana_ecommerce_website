@@ -137,3 +137,15 @@
             .hero-content h1 { font-size: 2.5rem; }
             .about-grid, .founder-row, .row-right { flex-direction: column; text-align: center; }
         }
+        .hero-banner {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('image6.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 60vh; /* Adjust height as needed */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white; /* Ensures your text stays white */
+        }

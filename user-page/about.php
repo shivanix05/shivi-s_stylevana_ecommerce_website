@@ -14,9 +14,9 @@ session_start();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <link rel="stylesheet" href="about.css">
 
-    <style>
-       
-    </style>
+    
+
+
 </head>
 <body>
 
@@ -28,14 +28,14 @@ session_start();
 
     <?php include("header.php"); ?>
 
-    <section class="hero-banner">
-        <div class="hero-content">
-            <p>Welcome to Stylevana</p>
-            <h1>Our Story</h1>
-            <div style="width: 50px; height: 2px; background: #fff; margin: 20px auto;"></div>
-            <p style="font-size: 0.9rem; letter-spacing: 4px;">Since 2024</p>
-        </div>
-    </section>
+   <section class="hero-banner" style="background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('image6.png'); background-size: cover; background-position: center; background-repeat: no-repeat; min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+    <div class="hero-content">
+        <p>Welcome to Stylevana</p>
+        <h1>Our Story</h1>
+        <div style="width: 50px; height: 2px; background: #fff; margin: 20px auto;"></div>
+        <p style="font-size: 0.9rem; letter-spacing: 4px;">Since 2024</p>
+    </div>
+</section>
 
     <div class="content-section">
         <div class="about-grid">
